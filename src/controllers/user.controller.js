@@ -2,7 +2,7 @@ import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 
 import { User } from "../models/Users.js"
-import { validateEmail, ActivationToken } from "../helpers/helpers.js"
+import { validateEmail, ActivationToken, sendMail } from "../helpers/helpers.js"
 
 // Error messages
 const errorFields = "Por favor llenar todos los campos."
@@ -89,6 +89,8 @@ export const createUser = async (req, res) => {
     }
 
     const activationToken = ActivationToken(newUser)
+
+    sendMail(user_email, 'Activación de cuenta sabores de mi tierra', activationToken)
 
     return res.status(200).send({
       message: `Usuario creado, recibirá un correo de activación de cuenta al correo: ${user_email}`,
