@@ -9,6 +9,7 @@ const errorFields = "Por favor llenar todos los campos."
 const errorInvalidEmail = "El campo de correo no es valido."
 const errorExistEmail = "El correo ya existe."
 const errorCharactersPassword = "La contraseña debe tener minimo 6 carácteres."
+const incorrectUser = "El usuario o contraseña es incorrecto."
 
 export const getUsers = async (req, res) => {
   let { page, limit } = req.query
@@ -138,15 +139,15 @@ export const login = async (req, res) => {
   try {
     const { user_email, password } = req.body
 
-    if(!user_email || !password) return res.status(400).send({ message: "Por favor rellena los campos" })
+    if(!user_email || !password) return res.status(400).send({ message: errorFields })
 
     const user = await User.findOne({ where: {user_email: user_email }})
 
-    if(!user) return res.status(400).send({ message: "Usuario  o contraseña incorrecto" })
+    if(!user) return res.status(400).send({ message: incorrectUser })
 
     const isMatch = bcrypt.compareSync(password, user.password.trim()) // compare password and password hash NOTE: password hash need sanitization (delete blank spaces)
 
-    if(!isMatch) return res.status(400).send({ message: "Usuario o contraseña incorrecto" })
+    if(!isMatch) return res.status(400).send({ message: incorrectUser })
 
     const refresToken = RefreshToken({id: user.user_id})
 
