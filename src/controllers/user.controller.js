@@ -2,7 +2,7 @@ import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 
 import { User } from "../models/Users.js"
-import { validateEmail, ActivationToken, sendMail } from "../helpers/helpers.js"
+import { validateEmail, ActivationToken, RefreshToken, sendMail } from "../helpers/helpers.js"
 
 // Error messages
 const errorFields = "Por favor llenar todos los campos."
@@ -74,10 +74,10 @@ export const createUser = async (req, res) => {
     if (user) return res.status(400).send({ message: errorExistEmail })
 
     // Validate password length
-    if (password.length < 6)
-      return res.status(400).send({ message: errorCharactersPassword })
+    if (password.length < 6) return res.status(400).send({ message: errorCharactersPassword })
 
-    const passwordHash = await bcrypt.hash(password, 12) // Encryp password
+    const salt = bcrypt.genSaltSync(10)
+    const passwordHash = bcrypt.hashSync(password, salt) // Encryp password
 
     const newUser = {
       user_email,
@@ -131,5 +131,42 @@ export const activationUser = async (req, res) => {
     return res.status(200).send({ message: "Activación exitosa", data_user: newUser })
   } catch (error) {
     return res.status(500).send({ message: error })
+  }
+}
+
+export const login = async (req, res) => {
+  try {
+    const { user_email, password } = req.body
+
+    if(!user_email || !password) return res.status(400).send({ message: "Por favor rellena los campos" })
+
+    const user = await User.findOne({ where: {user_email: user_email }})
+
+    if(!user) return res.status(400).send({ message: "Usuario  o contraseña incorrecto" })
+
+    const isMatch = bcrypt.compareSync(password, user.password.trim()) // compare password and password hash NOTE: password hash need sanitization (delete blank spaces)
+
+    if(!isMatch) return res.status(400).send({ message: "Usuario o contraseña incorrecto" })
+
+    const refresToken = RefreshToken({id: user.user_id})
+
+    const date = new Date()
+    // Update last login
+    await User.update({ last_login: date.toISOString() }, {
+      where: {
+        user_id: user.user_id
+      }
+    })
+
+    return res.status(200).send({
+      email: user.user_email,
+      user: user.username,
+      accessToken: refresToken,
+      last_login: date.toISOString(),
+      message: "Inicio de sesión exitoso"
+    })
+
+  } catch (error) {
+    return res.status(500).send({ message: `Ha ocurrido un error: ${error}` })
   }
 }

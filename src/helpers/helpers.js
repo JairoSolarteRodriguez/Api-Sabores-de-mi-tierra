@@ -13,7 +13,7 @@ export const validateEmail = (email) => {
 
 export const ActivationToken = (payload) => {
   return jwt.sign(payload, ACTIVATION_TOKEN_SECRET, {
-    expiresIn: "30m",
+    expiresIn: "5m",
   })
 }
 
