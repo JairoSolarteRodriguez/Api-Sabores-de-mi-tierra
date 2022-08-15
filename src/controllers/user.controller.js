@@ -1,8 +1,11 @@
-import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 
 import { User } from "../models/Users.js"
-import { validateEmail, ActivationToken, RefreshToken, sendMail } from "../helpers/helpers.js"
+import { validateEmail, ActivationToken, RefreshToken, sendMail, encryptPassword, comparePassword } from "../helpers/helpers.js"
+import "dotenv/config"
+
+const { ACTIVATION_TOKEN_SECRET } = process.env
+
 
 // Error messages
 const errorFields = "Por favor llenar todos los campos."
@@ -77,15 +80,14 @@ export const createUser = async (req, res) => {
     // Validate password length
     if (password.length < 6) return res.status(400).send({ message: errorCharactersPassword })
 
-    const salt = bcrypt.genSaltSync(10)
-    const passwordHash = bcrypt.hashSync(password, salt) // Encryp password
+    const passwordHash = encryptPassword(password) // Encryp password
 
     const newUser = {
       user_email,
       user_is_admin,
       user_is_staff,
       last_login,
-      password: passwordHash,
+      password: passwordHash.trim(),
       username,
     }
 
@@ -125,7 +127,7 @@ export const activationUser = async (req, res) => {
       user_is_admin,
       user_is_staff,
       last_login,
-      password,
+      password: password.trim(),
       username,
     })
 
@@ -145,7 +147,8 @@ export const login = async (req, res) => {
 
     if(!user) return res.status(400).send({ message: incorrectUser })
 
-    const isMatch = bcrypt.compareSync(password, user.password.trim()) // compare password and password hash NOTE: password hash need sanitization (delete blank spaces)
+    const passwordHash = user.password.trim()
+    const isMatch = comparePassword(password, passwordHash) // compare password and password hash NOTE: password hash need sanitization (delete blank spaces)
 
     if(!isMatch) return res.status(400).send({ message: incorrectUser })
 
@@ -169,5 +172,62 @@ export const login = async (req, res) => {
 
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error: ${error}` })
+  }
+}
+
+export const verifyForUpdatePassword = async (req, res) => {
+  try {
+    const { email } = req.body
+
+    if(!email) return res.status(400).send({ message: `Por favor rellene los campos` })  
+    
+    const user = await User.findOne({ where: { user_email: email }})
+    
+    if(!user || user.length === 0) return res.status(400).send({ message: `El correo ${email} no se encuentra registrado` })
+    
+    const newUser = {
+      id: user.user_id,
+      username: user.username,
+      user_email: user.user_email
+    }
+    
+    const token = ActivationToken(newUser)
+    sendMail(user.user_email, `Cambio de contraseña`, token, true)
+    return res.status(200).send({ message: `Verifique su correo (${user.user_email}) para cambiar la contraseña` })
+  } catch (error) {
+    return res.status(500).send({ message: `Ha ocurrido un error ${error}` })    
+  }
+}
+
+export const updatePassword = async(req, res) => {
+  try {
+    const { email, token, password, passwordConfirm } = req.body
+  
+    const user = await User.findOne({ where: { user_email: email }})
+    if(!user || user.length === 0) return res.status(400).send({ message: `El correo electrónico no es válido por favor realizar el proceso nuevamente` })
+    
+    const verifyEmail = jwt.verify(token, ACTIVATION_TOKEN_SECRET)
+    if(!verifyEmail) return res.status(400).send({ message: `La petición de cambio de contraseña ha expirado` })
+
+    if(!password || !passwordConfirm) return res.status(400).send({ message: `Por favor rellene todos los campos` })
+
+    if(password !== passwordConfirm) return res.status(400).send({ message: `Las contraseñas no coinciden` })
+    const newPassword = encryptPassword(password)
+  
+    if(user.user_email === verifyEmail.user_email){
+      const correctEmail = user.user_email
+  
+      await User.update({ password: newPassword }, {
+        where: {
+          user_email: correctEmail
+        }
+      })
+  
+      return res.status(200).send({ message: `contraseña ha sido cambiada` })
+    }
+
+    return res.status(400).send({ message: `Ha ocurrido un error por favor realizar el proceso nuevamente` })
+  } catch (error) {
+    return res.status(500).send(`Ha ocurrido un error: ${error}`)
   }
 }

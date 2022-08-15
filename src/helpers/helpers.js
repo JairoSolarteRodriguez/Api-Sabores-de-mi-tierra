@@ -1,5 +1,7 @@
 import jwt from "jsonwebtoken"
 import { transporter } from "../config/mail.config.js"
+import bcrypt from "bcrypt"
+
 
 import "dotenv/config"
 
@@ -29,21 +31,41 @@ export const RefreshToken = (payload) => {
   })
 }
 
-export const sendMail = async (user_email, subject, AccessToken) => {
+export const sendMail = async (user_email, subject, AccessToken, updatepassword = false) => {
+  const activate = `
+    <h2>Activa tu cuenta</h2>
+    <p>Bienvenidos a sabores de mi tierra, gracias por registrarte a continuación podras encontrar un botón para activar tu cuenta. Si usted no se registro haga caso omiso a este mensaje</p>
+    <a href=${FRONT_BASE_URL}/activate/${AccessToken}>Click para activar</a>
+    <p>O puedes copiar y pegar la siguiente url en tu navegador.</p>
+    <a href=${FRONT_BASE_URL}/activate/${AccessToken}>${FRONT_BASE_URL}/activate/${AccessToken}</a>
+  `
+  const update = `
+  <h2>Actualizar contraseña</h2>
+  <p>Se ha realizado una petición para cambiar la contraseña, si usted no realizo está petición haga caso omiso aeste mensaje</p>
+  <a href=${FRONT_BASE_URL}/change-password/${AccessToken}>Click para cambiar la contraseña</a>
+  <p>O puedes copiar y pegar la siguiente url en tu navegador.</p>
+  <a href=${FRONT_BASE_URL}/change-password/${AccessToken}>${FRONT_BASE_URL}/change-password/${AccessToken}</a>
+  `
+  
   try {
     await transporter.sendMail({
-      from: `Activar cuenta ${EMAIL}`,
+      from: updatepassword ? `Cambia tu contraseña ${EMAIL}` : `Activar cuenta ${EMAIL}`,
       to: user_email,
       subject: subject,
-      html: `
-        <h2>Activa tu cuenta</h2>
-        <p>Bienvenidos a sabores de mi tierra, gracias por registrarte a continuación podras encontrar un botón para activar tu cuenta. Si usted no se registro haga caso omiso a este mensaje</p>
-        <a href=${FRONT_BASE_URL}/activate/${AccessToken}>Click para activar</a>
-        <p>O puedes copiar y pegar la siguiente url en tu navegador.</p>
-        <a href=${FRONT_BASE_URL}/activate/${AccessToken}>${FRONT_BASE_URL}/activate/${AccessToken}</a>
-      `,
+      html: updatepassword ? update : activate,
     })
   } catch (error) {
     return `No se pudo enviar el mensaje error: ${error}`
   }
+}
+
+export const encryptPassword = (password) => {
+  const salt = bcrypt.genSaltSync(10)
+  const passwordHash = bcrypt.hashSync(password, salt)
+  return passwordHash.trim()
+}
+
+export const comparePassword = (password, passwordHash) => {
+  const isMatch = bcrypt.compareSync(password, passwordHash)
+  return isMatch
 }
