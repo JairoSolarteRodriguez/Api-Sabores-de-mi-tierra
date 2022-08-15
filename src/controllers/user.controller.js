@@ -40,6 +40,7 @@ export const getUsers = async (req, res) => {
         "user_email",
         "user_is_admin",
         "user_is_staff",
+        "user_is_active",
         "last_login",
         "createdAt",
         "updatedAt",
@@ -149,9 +150,9 @@ export const login = async (req, res) => {
 
     const passwordHash = user.password.trim()
     const isMatch = comparePassword(password, passwordHash) // compare password and password hash NOTE: password hash need sanitization (delete blank spaces)
-
+    
     if(!isMatch) return res.status(400).send({ message: incorrectUser })
-
+    
     const refresToken = RefreshToken({id: user.user_id})
 
     const date = new Date()
@@ -165,6 +166,7 @@ export const login = async (req, res) => {
     return res.status(200).send({
       email: user.user_email,
       user: user.username,
+      user_is_active: !user.user_is_active ? `Tu cuenta esta deshabilitada, desea habilitarla?` : user.user_is_active,
       accessToken: refresToken,
       last_login: date.toISOString(),
       message: "Inicio de sesión exitoso"
@@ -229,5 +231,46 @@ export const updatePassword = async(req, res) => {
     return res.status(400).send({ message: `Ha ocurrido un error por favor realizar el proceso nuevamente` })
   } catch (error) {
     return res.status(500).send(`Ha ocurrido un error: ${error}`)
+  }
+}
+
+export const deleteUser = async(req, res) => {
+  try {
+    const { id } = req.params
+    const userId = parseInt(id)
+
+    const deleted = await User.destroy({
+      where: {
+        user_id: userId
+      }
+    })
+    
+    if(deleted === 1 ) return res.status(200).send({ message: `Usuario ${userId} eliminado exitosamente` })
+    
+    if(deleted === 0 ) return res.status(400).send({ message: `El usuario ${userId} no fue encontrado` })
+    
+    return res.status(200).send({ message: deleted })
+  } catch (error) {
+    return res.status(500).send({ message: `Ha ocurrido un error: ${error}` })
+  }
+}
+
+export const disableUser = async(req, res) => { // Disabled a user
+  try {
+    const { isActive } = req.body
+    const { id } = req.params
+    const userId = parseInt(id)
+
+    const updatedUser = await User.update({ user_is_active: isActive }, {
+      where: {
+        user_id: userId
+      }
+    })
+
+    if(!updatedUser || updatedUser[0] === 0) return res.status(400).send({ message: `Usuario no encontrado` })
+
+    if(updatedUser[0] === 1) return res.status(200).send({ message: `Usuario ${userId} modificado exitosamente` })
+  } catch (error) {
+    return res.status(500).send({ message: `Ha ocurrido un error: ${error}` })
   }
 }

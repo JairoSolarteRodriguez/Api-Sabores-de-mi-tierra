@@ -1,8 +1,9 @@
 import { Router } from 'express'
-import { getUsers, createUser, activationUser, login, verifyForUpdatePassword, updatePassword } from '../controllers/user.controller.js'
+import { getUsers, createUser, activationUser, login, verifyForUpdatePassword, updatePassword, deleteUser, disableUser } from '../controllers/user.controller.js'
 
 // Middlewares
 import { authAdmin } from '../middlewares/authAdmin.js'
+import { authOwnerOrAdmin } from '../middlewares/authOwnerOrAdmin.js'
 
 const router = Router()
 
@@ -14,10 +15,12 @@ router.post('/register', createUser)
 router.post('/login', login)
 router.post('/activate', activationUser)
 router.post('/change-password', verifyForUpdatePassword)
-router.post('/update-password', updatePassword)
-router.get('/users/:id')
-router.put('/users/:id')
-router.delete('/users/:id')
+router.put('/update-password', updatePassword)
+router.delete('/users/:id', authOwnerOrAdmin, deleteUser)
+router.patch('/users/disabled/:id', authOwnerOrAdmin, disableUser)
+
+
+/*==========Profile Routes=================*/
 
 
 

@@ -9,9 +9,12 @@ export const User = sequelize.define(
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
+      allowNull: false,
     },
     user_email: {
       type: DataTypes.STRING,
+      allowNull: false,
+      unique: true
     },
     user_is_staff: {
       type: DataTypes.BOOLEAN,
@@ -26,9 +29,15 @@ export const User = sequelize.define(
     },
     password: {
       type: DataTypes.CHAR,
+      allowNull: false,
     },
     username: {
       type: DataTypes.STRING,
+      allowNull: false,
+    },
+    user_is_active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
     },
   },
   {
