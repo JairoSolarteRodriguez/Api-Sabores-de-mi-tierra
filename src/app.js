@@ -1,7 +1,9 @@
 //express
 import express from 'express'
-import userRoutes from './routes/users.routes.js'
 import cors from 'cors'
+
+import userRoutes from './routes/users.routes.js'
+import ProfileRoutes from './routes/profiles.routes.js'
 
 const app = express()
 
@@ -11,5 +13,6 @@ app.use(cors())
 
 
 app.use(userRoutes)
+app.use(ProfileRoutes)
 
 export default app;

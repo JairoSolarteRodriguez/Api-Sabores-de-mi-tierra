@@ -20,8 +20,4 @@ router.delete('/users/:id', authOwnerOrAdmin, deleteUser)
 router.patch('/users/disabled/:id', authOwnerOrAdmin, disableUser)
 
 
-/*==========Profile Routes=================*/
-
-
-
 export default router

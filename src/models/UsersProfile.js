@@ -22,6 +22,8 @@ export const UserProfile = sequelize.define("users_profile", {
   profile_photo:{
     type: DataTypes.TEXT
   },
+},{
+  timestamps: true,
 })
 
 User.hasOne(UserProfile, {
