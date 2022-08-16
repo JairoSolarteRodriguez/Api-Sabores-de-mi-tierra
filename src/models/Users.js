@@ -37,6 +37,14 @@ export const User = sequelize.define("users", {
     type: DataTypes.BOOLEAN,
     defaultValue: true,
   },
+  user_restricted: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
+  user_blocked: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
 },{
   timestamps: true,
 })

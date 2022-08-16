@@ -147,11 +147,15 @@ export const login = async (req, res) => {
     const user = await User.findOne({ where: {user_email: user_email }})
 
     if(!user) return res.status(400).send({ message: incorrectUser })
-
+    
     const passwordHash = user.password.trim()
     const isMatch = comparePassword(password, passwordHash) // compare password and password hash NOTE: password hash need sanitization (delete blank spaces)
     
     if(!isMatch) return res.status(400).send({ message: incorrectUser })
+    
+    if(user.user_restricted) return res.status(400).send({ message: `El usuario está temporalmente restringido` })
+
+    if(user.user_blocked) return res.status(400).send({ message: `El usuario está bloqueado de nuestra aplicación` })
     
     const refresToken = RefreshToken({id: user.user_id})
 
