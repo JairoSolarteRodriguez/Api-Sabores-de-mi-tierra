@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken"
 
-import { User } from "../models/Users.js"
-import { validateEmail, ActivationToken, RefreshToken, sendMail, encryptPassword, comparePassword } from "../helpers/helpers.js"
+import { User } from "../../models/Users.js"
+import { validateEmail, ActivationToken, RefreshToken, sendMail, encryptPassword, comparePassword } from "../../helpers/helpers.js"
 import "dotenv/config"
 
 const { ACTIVATION_TOKEN_SECRET } = process.env
@@ -42,6 +42,8 @@ export const getUsers = async (req, res) => {
         "user_is_staff",
         "user_is_active",
         "last_login",
+        "user_restricted",
+        "user_blocked",
         "createdAt",
         "updatedAt",
       ],
@@ -132,7 +134,7 @@ export const activationUser = async (req, res) => {
       username,
     })
 
-    return res.status(200).send({ message: "Activación exitosa", data_user: newUser })
+    if(newUser) return res.status(200).send({ message: "Activación exitosa", data_user: newUser })
   } catch (error) {
     return res.status(500).send({ message: error })
   }

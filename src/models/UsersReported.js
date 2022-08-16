@@ -17,6 +17,10 @@ export const UserReported = sequelize.define("users_reported",{
   user_reported_date: {
     type: DataTypes.DATE,
   },
+  user_report_active: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true
+  },
 },{
   timestamps: true,
 })
