@@ -54,7 +54,8 @@ export const rejectReport = async (req, res) => {
 
   UserReported.update({ user_report_active: false }, {
     where: {
-      user_reported: id
+      user_reported: id,
+      user_report_active: true
     }
   })
 
@@ -67,13 +68,15 @@ export const getActiveReports = async (req, res) => {
   if(!id) return res.status(400).send({ message: `Por favor enviar un id` })
 
   const UsersReports = await UserReported.findAll({
-    where: { '$users_reported.user_reported$': id},
+    where: { '$users_reported.user_reported$': id, '$users_reported.user_report_active$': true }, // get active reports
     include: [{
       model: User,
     }]
   })
 
-  if(!UsersReports || UsersReports.length === 0) return res.status(200).send({ message: `No se encontraron reportes para el usuario: ${id}` })
+  const user = await User.findOne({ where: { user_id : id }})
+
+  if(!UsersReports || UsersReports.length === 0) return res.status(200).send({ message: `No se encontraron reportes activos para el usuario: ${user.username}` })
 
   return res.status(200).send(UsersReports)
 }
