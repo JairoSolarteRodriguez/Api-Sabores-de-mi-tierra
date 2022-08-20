@@ -72,6 +72,19 @@ export const getActiveReports = async (req, res) => {
   const UsersReports = await UserReported.findAll({
     where: { '$users_reported.user_reported$': id, '$users_reported.user_report_active$': true }, // get active reports
     include: [{
+      attributes: [
+        "user_id",
+        "username",
+        "user_email",
+        "user_is_admin",
+        "user_is_staff",
+        "user_is_active",
+        "last_login",
+        "user_restricted",
+        "user_blocked",
+        "createdAt",
+        "updatedAt",
+      ],
       model: User,
     }]
   })
