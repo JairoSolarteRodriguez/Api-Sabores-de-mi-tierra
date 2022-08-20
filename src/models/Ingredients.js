@@ -1,0 +1,18 @@
+import { DataTypes } from "sequelize"
+import { sequelize } from "../db/db.js"
+
+
+export const Ingredients = sequelize.define("ingredients", {
+  ingredient_id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+    allowNull: false,
+  },
+  ingredient_name: {
+    type: DataTypes.STRING,
+    allowNull: false
+  }
+},{
+  timestamps: true,
+})

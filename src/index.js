@@ -4,6 +4,11 @@ import { sequelize } from "./db/db.js"
 // import './models/Users.js'
 // import './models/UsersProfile.js'
 // import './models/UsersReported.js'
+import './models/Categories.js'
+import './models/Dificults.js'
+import './models/Ingredients.js'
+import './models/Prices.js'
+import './models/Tools.js'
 
 const PORT = process.env.PORT || 3000
 

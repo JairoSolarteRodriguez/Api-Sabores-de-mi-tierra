@@ -2,8 +2,6 @@ import { DataTypes } from "sequelize"
 import { sequelize } from "../db/db.js"
 import { User } from "./Users.js"
 
-
-// User Schema
 export const UserReported = sequelize.define("users_reported",{
   user_reported_id: {
     type: DataTypes.INTEGER,
