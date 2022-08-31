@@ -9,6 +9,7 @@ import CategoryRoutes from './routes/categories.routes.js'
 import DificultRoutes from './routes/dificults.routes.js'
 import InstrumentsRoutes from './routes/ingredients.routes.js'
 import Tools from './routes/tools.routes.js'
+import Prices from './routes/prices.routes.js'
 
 const app = express()
 
@@ -26,5 +27,6 @@ app.use(CategoryRoutes)
 app.use(DificultRoutes)
 app.use(InstrumentsRoutes)
 app.use(Tools)
+app.use(Prices)
 
 export default app;
