@@ -126,7 +126,10 @@ web_modules/
 
 # dotenv environment variable files
 .env
+<<<<<<< HEAD
 .env.old
+=======
+>>>>>>> 48bb84058c4fca9eb6fe6d33035e62ea38832265
 .env.development.local
 .env.test.local
 .env.production.local
@@ -217,4 +220,8 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+<<<<<<< HEAD
 # End of https://www.toptal.com/developers/gitignore/api/node,windows,macos,linux
+=======
+# End of https://www.toptal.com/developers/gitignore/api/node,windows,macos,linux
+>>>>>>> 48bb84058c4fca9eb6fe6d33035e62ea38832265
