@@ -9,6 +9,7 @@ import './models/Dificults.js'
 import './models/Ingredients.js'
 import './models/Prices.js'
 import './models/Tools.js'
+import './models/Measures.js'
 
 const PORT = process.env.PORT || 3000
 

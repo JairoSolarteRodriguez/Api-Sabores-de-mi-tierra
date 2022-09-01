@@ -2,6 +2,7 @@
 import express from 'express'
 import cors from 'cors'
 
+
 import userRoutes from './routes/users.routes.js'
 import ProfileRoutes from './routes/profiles.routes.js'
 import ReportRoutes from './routes/reports.routes.js'
@@ -10,6 +11,7 @@ import DificultRoutes from './routes/dificults.routes.js'
 import InstrumentsRoutes from './routes/ingredients.routes.js'
 import Tools from './routes/tools.routes.js'
 import Prices from './routes/prices.routes.js'
+import Measures from './routes/measures.routes.js'
 
 const app = express()
 
@@ -28,5 +30,6 @@ app.use(DificultRoutes)
 app.use(InstrumentsRoutes)
 app.use(Tools)
 app.use(Prices)
+app.use(Measures)
 
 export default app;
