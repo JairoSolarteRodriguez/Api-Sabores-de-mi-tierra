@@ -12,6 +12,7 @@ import InstrumentsRoutes from './routes/ingredients.routes.js'
 import Tools from './routes/tools.routes.js'
 import Prices from './routes/prices.routes.js'
 import Measures from './routes/measures.routes.js'
+import Steps from './routes/steps.routes.js'
 
 const app = express()
 
@@ -23,6 +24,7 @@ app.use(cors())
 app.use(userRoutes)
 app.use(ProfileRoutes)
 app.use(ReportRoutes)
+app.use(Steps)
 
 // public api routes
 app.use(CategoryRoutes)

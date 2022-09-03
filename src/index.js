@@ -10,6 +10,7 @@ import './models/Ingredients.js'
 import './models/Prices.js'
 import './models/Tools.js'
 import './models/Measures.js'
+import './models/Steps.js'
 
 const PORT = process.env.PORT || 3000
 
