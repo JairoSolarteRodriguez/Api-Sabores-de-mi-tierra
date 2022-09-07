@@ -16,19 +16,14 @@ export const getStepById = async (req, res) => {
   }
 }
 
-//TODO: crear la logica para devolver los pasos relacionado con una receta
-export const getStespByRecipeId = async (req, res) => {
-
-}
-
 export const createStep = async (req, res) => {
   try {
     const {
       step_number,
       step_image,
-      step_description
+      step_description,
     } = req.body
-
+    
     if(!step_number || !step_description) return res.status(400).send({ message: `Los campos número de paso y descripción son obligatorios`})
 
     const newStep = await Steps.create({
