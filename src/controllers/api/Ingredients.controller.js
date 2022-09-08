@@ -57,9 +57,9 @@ export const updateIngredient = async (req, res) => {
       }
     })
 
-    if(!ingredient) return res.status(200).send({ message: `No se ecuentra el ingrediente con el id: ${id}` })
+    if(ingredient[0] === 0) return res.status(200).send({ message: `No se ecuentra el ingrediente con el id: ${id}` })
 
-    if(ingredient) return res.status(200).send({ message: `El ingrediente se ha actualizado` })
+    if(ingredient[0] >= 1) return res.status(200).send({ message: `El ingrediente se ha actualizado` })
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error: ${error}` })
   }
@@ -77,9 +77,9 @@ export const deleteIngredientById = async (req, res) => {
       }
     })
 
-    if(!ingredient) return res.status(200).send({ message: `No se ecuentra el ingrediente con el id: ${id}` })
+    if(ingredient === 0 ) return res.status(200).send({ message: `No se ecuentra el ingrediente con el id: ${id}` })
 
-    if(ingredient) return res.status(200).send({ message: `El ingrediente se ha eliminado correctamente` })
+    if(ingredient === 1 ) return res.status(200).send({ message: `El ingrediente se ha eliminado correctamente` })
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error: ${error}` })
   }

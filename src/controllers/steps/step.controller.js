@@ -38,7 +38,6 @@ export const createStep = async (req, res) => {
     return res.status(500).send({ message: `Ha ocurrido un error ${error}` })
   }
 }
-
 //TODO: arreglar la actualización del owner
 export const updateStepDescription = async (req, res) => {
   try {
@@ -54,10 +53,13 @@ export const updateStepDescription = async (req, res) => {
         step_id: id
       }
     })
+
+    console.log({step: step.length})
+    console.log({step})
   
-    if(!step) return res.status(400).send({ message: `No se encuenta el paso` })
+    if(step[0] === 0) return res.status(400).send({ message: `No se encuenta el paso` })
   
-    if(step) return res.status(200).send({ message: `El paso se ha actualizado correctamente` })
+    if(step[0] >= 1) return res.status(200).send({ message: `El paso se ha actualizado correctamente` })
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error: ${error}` })
   }
@@ -78,9 +80,9 @@ export const updateStepImage = async (req, res) => {
       }
     })
   
-    if(!step) return res.status(400).send({ message: `No se encuenta el paso` })
+    if(step[0] === 0) return res.status(400).send({ message: `No se encuenta el paso` })
   
-    if(step) return res.status(200).send({ message: `El paso se ha actualizado correctamente` })
+    if(step[0] >= 1) return res.status(200).send({ message: `El paso se ha actualizado correctamente` })
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error: ${error}` })
   }
@@ -98,9 +100,9 @@ export const deleteStepById = async (req, res) => {
       }
     })
 
-    if(!step) return res.status(400).send({ message: `No se encuenta el paso` })
+    if(step === 0 ) return res.status(400).send({ message: `No se encuenta el paso` })
 
-    if(step) return res.status(200).send({ message: `Se ha eliminado el paso` })
+    if(step === 1 ) return res.status(200).send({ message: `Se ha eliminado el paso` })
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error: ${error}` })
   }

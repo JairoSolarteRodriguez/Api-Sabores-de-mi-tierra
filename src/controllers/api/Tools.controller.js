@@ -57,9 +57,9 @@ export const updateTool = async (req, res) => {
       }
     })
 
-    if(!tools) return res.status(200).send({ message: `No se ecuentra el instrumento con el id: ${id}` })
+    if(tools[0] === 0) return res.status(200).send({ message: `No se ecuentra el instrumento con el id: ${id}` })
 
-    if(tools) return res.status(200).send({ message: `El instrumento se ha actualizado` })
+    if(tools[0] >= 1) return res.status(200).send({ message: `El instrumento se ha actualizado` })
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error: ${error}` })
   }
@@ -77,9 +77,9 @@ export const deleteToolById = async (req, res) => {
       }
     })
 
-    if(!tool) return res.status(200).send({ message: `No se ecuentra el instrumento con el id: ${id}` })
+    if(tool === 0 ) return res.status(200).send({ message: `No se ecuentra el instrumento con el id: ${id}` })
 
-    if(tool) return res.status(200).send({ message: `El instrumento se ha eliminado correctamente` })
+    if(tool === 1 ) return res.status(200).send({ message: `El instrumento se ha eliminado correctamente` })
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error: ${error}` })
   }

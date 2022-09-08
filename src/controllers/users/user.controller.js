@@ -275,7 +275,7 @@ export const disableUser = async(req, res) => { // Disabled a user
 
     if(!updatedUser || updatedUser[0] === 0) return res.status(400).send({ message: `Usuario no encontrado` })
 
-    if(updatedUser[0] === 1) return res.status(200).send({ message: `Usuario ${userId} modificado exitosamente` })
+    if(updatedUser[0] >= 1) return res.status(200).send({ message: `Usuario ${userId} modificado exitosamente` })
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error: ${error}` })
   }

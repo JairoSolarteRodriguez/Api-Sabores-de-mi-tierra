@@ -57,9 +57,9 @@ export const updateDificult = async (req, res) => {
       }
     })
 
-    if(!dificult) return res.status(200).send({ message: `No se ecuentra la dificultad con el id: ${id}` })
+    if(dificult[0] === 0) return res.status(200).send({ message: `No se ecuentra la dificultad con el id: ${id}` })
 
-    if(dificult) return res.status(200).send({ message: `La dificultad se ha actualizado` })
+    if(dificult[0] >= 1) return res.status(200).send({ message: `La dificultad se ha actualizado` })
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error: ${error}` })
   }
@@ -77,9 +77,9 @@ export const deleteDificultById = async (req, res) => {
       }
     })
 
-    if(!dificult) return res.status(200).send({ message: `No se ecuentra la dificultad con el id: ${id}` })
+    if(dificult === 0 ) return res.status(200).send({ message: `No se ecuentra la dificultad con el id: ${id}` })
 
-    if(dificult) return res.status(200).send({ message: `La dificultad se ha eliminado correctamente` })
+    if(dificult === 1 ) return res.status(200).send({ message: `La dificultad se ha eliminado correctamente` })
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error: ${error}` })
   }

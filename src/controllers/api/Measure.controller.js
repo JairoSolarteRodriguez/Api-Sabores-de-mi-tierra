@@ -57,9 +57,9 @@ export const updateMeasure = async (req, res) => {
       }
     })
 
-    if(!measure) return res.status(200).send({ message: `No se ecuentra la medida con el id: ${id}` })
+    if(measure[0] === 0) return res.status(200).send({ message: `No se ecuentra la medida con el id: ${id}` })
 
-    if(measure) return res.status(200).send({ message: `La medida se ha actualizado` })
+    if(measure[0] >= 1) return res.status(200).send({ message: `La medida se ha actualizado` })
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error: ${error}` })
   }
@@ -77,9 +77,9 @@ export const deleteMeasureById = async (req, res) => {
       }
     })
 
-    if(!measure) return res.status(200).send({ message: `No se ecuentra la medida con el id: ${id}` })
+    if(measure === 0) return res.status(200).send({ message: `No se ecuentra la medida con el id: ${id}` })
 
-    if(measure) return res.status(200).send({ message: `La medida se ha eliminado correctamente` })
+    if(measure === 1) return res.status(200).send({ message: `La medida se ha eliminado correctamente` })
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error: ${error}` })
   }

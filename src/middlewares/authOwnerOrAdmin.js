@@ -10,6 +10,8 @@ export const authOwnerOrAdmin = async (req, res, next) => {
     const authorizationToken = req.header("Authorization")
     const eliminatedId = req.params.id
 
+    console.log({eliminatedId})
+
     if(!authorizationToken) return res.status(401).send({ message: `Authorización inválida` })
     
     const userToken = jwt.verify(authorizationToken, REFRESH_TOKEN_SECRET)

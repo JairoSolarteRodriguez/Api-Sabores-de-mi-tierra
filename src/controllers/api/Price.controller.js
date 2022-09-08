@@ -58,9 +58,9 @@ export const updatePrice = async (req, res) => {
       }
     })
 
-    if(!prices) return res.status(200).send({ message: `No se ecuentra el sufijo para precio con el id: ${id}` })
+    if(prices[0] === 0) return res.status(200).send({ message: `No se ecuentra el sufijo para precio con el id: ${id}` })
 
-    if(prices) return res.status(200).send({ message: `El sufijo para precio se ha actualizado` })
+    if(prices[0] >= 1) return res.status(200).send({ message: `El sufijo para precio se ha actualizado` })
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error: ${error}` })
   }
@@ -78,9 +78,9 @@ export const deletePriceById = async (req, res) => {
       }
     })
 
-    if(!price) return res.status(200).send({ message: `No se ecuentra el sufijo para precio con el id: ${id}` })
+    if(price === 0 ) return res.status(200).send({ message: `No se ecuentra el sufijo para precio con el id: ${id}` })
 
-    if(price) return res.status(200).send({ message: `El sufijo para precio se ha eliminado correctamente` })
+    if(price === 1 ) return res.status(200).send({ message: `El sufijo para precio se ha eliminado correctamente` })
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error: ${error}` })
   }
