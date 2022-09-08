@@ -53,9 +53,6 @@ export const updateStepDescription = async (req, res) => {
         step_id: id
       }
     })
-
-    console.log({step: step.length})
-    console.log({step})
   
     if(step[0] === 0) return res.status(400).send({ message: `No se encuenta el paso` })
   
