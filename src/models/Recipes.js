@@ -13,15 +13,15 @@ export const Recipes = sequelize.define("recipes", {
         allowNull: false
     },
     user_id: {
-        type: DataTypes.INTEGER.UNSIGNED,
+        type: DataTypes.INTEGER,
         allowNull: false
     },
     price_id: {
-        type: DataTypes.INTEGER.UNSIGNED,
+        type: DataTypes.INTEGER,
         allowNull: false
     },
     recipe_dificult: {
-        type: DataTypes.INTEGER.UNSIGNED,
+        type: DataTypes.INTEGER,
         allowNull: false
     },
     recipe_name: {
@@ -35,7 +35,7 @@ export const Recipes = sequelize.define("recipes", {
         type: DataTypes.INTEGER
     },
     recipe_time: {
-        type: DataTypes.TIME,
+        type: DataTypes.INTEGER,
         allowNull: false
     },
     recipe_description: {
