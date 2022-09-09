@@ -1,8 +1,8 @@
 import { DataTypes } from "sequelize"
 import { sequelize } from "../db/db.js"
 import { User } from "./Users.js"
-import { Prices } from './Prices'
-import { Dificults } from './Dificults'
+import { Prices } from './Prices.js'
+import { Dificult } from './Dificults.js'
 
 
 export const Recipes = sequelize.define("recipes", {
@@ -20,7 +20,7 @@ export const Recipes = sequelize.define("recipes", {
         type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false
     },
-    recipes_dificult: {
+    recipe_dificult: {
         type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false
     },
@@ -36,10 +36,6 @@ export const Recipes = sequelize.define("recipes", {
     },
     recipe_time: {
         type: DataTypes.TIME,
-        allowNull: false
-    },
-    recipe_date_pub: {
-        type: DataTypes.DATE,
         allowNull: false
     },
     recipe_description: {
@@ -88,12 +84,12 @@ Recipes.belongsTo(Prices,{
 })
 
 //Dificult
-Dificults.hasOne(Recipes,{
-    foreignKey: 'recipes_dificult',
+Dificult.hasOne(Recipes,{
+    foreignKey: 'recipe_dificult',
     sourceKeys: 'recipe_id'
 })
 
-Recipes.belongsTo(Dificults,{
-    foreignKey: 'recipes_dificult',
+Recipes.belongsTo(Dificult,{
+    foreignKey: 'recipe_dificult',
     targetId: 'recipe_id'
 })

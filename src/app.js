@@ -13,6 +13,7 @@ import Tools from './routes/tools.routes.js'
 import Prices from './routes/prices.routes.js'
 import Measures from './routes/measures.routes.js'
 import Steps from './routes/steps.routes.js'
+import Recipes from './routes/recipes.routes.js'
 
 const app = express()
 
@@ -20,7 +21,7 @@ const app = express()
 app.use(express.json())
 app.use(cors())
 
-
+app.use(Recipes)
 app.use(userRoutes)
 app.use(ProfileRoutes)
 app.use(ReportRoutes)

@@ -1,4 +1,4 @@
-import { Recipes } from "../../models/Recipes";
+import { Recipes } from "../../models/Recipes.js";
 
 // Error messages
 const errorFields = "Por favor llenar todos los campos."
@@ -39,11 +39,10 @@ export const createRecipes = async (req, res) => {
       recipe_photo,
       recipe_portions,
       recipe_time,
-      recipe_date_pub,
-      recipe_description
+      recipe_description,
     } = req.body
 
-    if (!recipe_name | !recipe_description | !recipe_restricted | !recipe_blocked | !recipe_privacity) return res.status(400).send({ message: errorFields })
+    if (!recipe_name | !recipe_description) return res.status(400).send({ message: errorFields })
 
     const newRecipe = await Recipes.create({
       user_id,
@@ -53,7 +52,7 @@ export const createRecipes = async (req, res) => {
       recipe_photo,
       recipe_portions,
       recipe_time,
-      recipe_date_pub
+      recipe_description
     })
 
     console.log(newRecipe)
@@ -74,11 +73,10 @@ export const updateRecipeById = async (req, res) => {
       recipe_photo,
       recipe_portions,
       recipe_time,
-      recipe_date_pub,
       recipe_description
     } = req.body
 
-    if (!recipe_name | !recipe_description | !recipe_restricted | !recipe_blocked | !recipe_privacity) return res.status(400).send({ message: errorFields })
+    if (!recipe_name | !recipe_description) return res.status(400).send({ message: errorFields })
 
     if (!id) return res.status(400).send({ message: `Por favor enviar un id` })
 
@@ -90,7 +88,6 @@ export const updateRecipeById = async (req, res) => {
       recipe_photo,
       recipe_portions,
       recipe_time,
-      recipe_date_pub,
       recipe_description
     }, {
       where: {

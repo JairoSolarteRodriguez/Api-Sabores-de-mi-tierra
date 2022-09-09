@@ -11,7 +11,7 @@ const router = Router()
 /*==========Recipes Routes=================*/
 router.get('/recipes', getAllRecipes)
 router.get('/recipes/:id', authOwnerOrAdmin, getRecipeById)
-router.post('/recipe', createRecipes)
+router.post('/recipes', createRecipes)
 router.patch('/recipe/:id', authOwnerOrAdmin, updateRecipeById)
 router.patch('/recipe-privacity/:id', authOwnerOrAdmin, privacityRecipeById)
 router.delete('/recipe/:id', authOwnerOrAdmin, deleteRecipeById)
