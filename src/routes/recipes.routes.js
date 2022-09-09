@@ -10,13 +10,13 @@ const router = Router()
 
 /*==========Recipes Routes=================*/
 router.get('/recipes', getAllRecipes)
-router.get('/recipes/:id', authOwnerOrAdmin, getRecipeById)
+router.get('/recipes/:id', getRecipeById)
 router.post('/recipes', createRecipes)
-router.patch('/recipe/:id', authOwnerOrAdmin, updateRecipeById)
-router.patch('/recipe-privacity/:id', authOwnerOrAdmin, privacityRecipeById)
-router.delete('/recipe/:id', authOwnerOrAdmin, deleteRecipeById)
+router.patch('/recipes/:id', authOwnerOrAdmin, updateRecipeById)
+router.patch('/recipes-privacity/:id', authOwnerOrAdmin, privacityRecipeById)
+router.delete('/recipes/:id', authAdmin, deleteRecipeById)
 router.delete('/recipes', authAdmin, deleteAllRecipes)
-router.patch('/recipe-restrict/:id', authAdmin, restrictRecipeById)
-router.patch('/recipe-block/:id', authAdmin, blockRecipeById)
+router.patch('/recipes-restrict/:id', authAdmin, restrictRecipeById)
+router.patch('/recipes-block/:id', authAdmin, blockRecipeById)
 
 export default router

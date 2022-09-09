@@ -7,7 +7,7 @@ export const getAllRecipes = async (req, res) => {
   try {
     const recipes = await Recipes.findAll()
 
-    if (recipes) return res.status(200).send({ recipes })
+    if (recipes) return res.status(200).send(recipes)
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error: ${error}` })
   }
@@ -23,7 +23,7 @@ export const getRecipeById = async (req, res) => {
 
     if (!recipes) return res.status(200).send({ message: `No se ecuentra la receta con el id: ${id}` })
 
-    if (recipes) return res.status(200).send({ recipes })
+    if (recipes) return res.status(200).send(recipes)
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error: ${error}` })
   }
@@ -55,7 +55,6 @@ export const createRecipes = async (req, res) => {
       recipe_description
     })
 
-    console.log(newRecipe)
     if (newRecipe) return res.status(200).send({ message: `Se ha creado la receta: ${newRecipe.recipe_name}` })
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error ${error}` })
@@ -154,7 +153,7 @@ export const restrictRecipeById = async (req, res) => {
 
     if (!recipe) return res.status(200).send({ message: `No se ecuentra la receta con el id: ${id}` })
 
-    if (recipe) return res.status(200).send({ message: `La restricción de la receta se ha actualizado` })
+    if (recipe) return res.status(200).send({ message: `Se ha restringido la receta #${id}` })
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error: ${error}` })
   }
@@ -181,7 +180,7 @@ export const blockRecipeById = async (req, res) => {
 
     if (!recipe) return res.status(200).send({ message: `No se ecuentra la receta con el id: ${id}` })
 
-    if (recipe) return res.status(200).send({ message: `El bloqueo de la receta se ha actualizado` })
+    if (recipe) return res.status(200).send({ message: `Se ha bloqueado la receta #${id}` })
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error: ${error}` })
   }
