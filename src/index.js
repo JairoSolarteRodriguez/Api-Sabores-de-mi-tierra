@@ -18,6 +18,7 @@ import './models/StepMeasures.js'
 import './models/RecipeCategories.js'
 import './models/FavoriteRecipes.js'
 import './models/StepRecipes.js'
+import './models/Stars.js'
 
 const PORT = process.env.PORT || 3000
 

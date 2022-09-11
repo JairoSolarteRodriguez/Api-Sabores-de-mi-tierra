@@ -15,6 +15,7 @@ import Measures from './routes/measures.routes.js'
 import Steps from './routes/steps.routes.js'
 import Recipes from './routes/recipes.routes.js'
 import FavRecipes from './routes/favRecipes.routes.js'
+import Stars from './routes/stars.routes.js'
 
 const app = express()
 
@@ -28,6 +29,7 @@ app.use(ProfileRoutes)
 app.use(ReportRoutes)
 app.use(Steps)
 app.use(FavRecipes)
+app.use(Stars)
 
 // public api routes
 app.use(CategoryRoutes)
