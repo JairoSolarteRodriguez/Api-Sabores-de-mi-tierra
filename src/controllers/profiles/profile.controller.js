@@ -11,12 +11,6 @@ export const createProfile = async (req, res) => {
       user_id,
     } = req.body
 
-    console.log({profile_stars,
-      profile_name,
-      profile_birth_date,
-      profile_photo,
-      user_id})
-
     if(!profile_name, !user_id) return res.status(400).send({ message: `Los campos nombre y usuario son obligatorios`})
 
     const profile = await UserProfile.findOne({ where: {user_id: user_id}})

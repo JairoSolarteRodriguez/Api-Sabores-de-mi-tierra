@@ -14,6 +14,7 @@ import Prices from './routes/prices.routes.js'
 import Measures from './routes/measures.routes.js'
 import Steps from './routes/steps.routes.js'
 import Recipes from './routes/recipes.routes.js'
+import FavRecipes from './routes/favRecipes.routes.js'
 
 const app = express()
 
@@ -26,6 +27,7 @@ app.use(userRoutes)
 app.use(ProfileRoutes)
 app.use(ReportRoutes)
 app.use(Steps)
+app.use(FavRecipes)
 
 // public api routes
 app.use(CategoryRoutes)
