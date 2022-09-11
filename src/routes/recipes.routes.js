@@ -5,6 +5,7 @@ import { authAdmin } from '../middlewares/authAdmin.js'
 import { authOwnerOrAdmin } from '../middlewares/authOwnerOrAdmin.js'
 
 import { createRecipes, getRecipeById, getAllRecipes, deleteRecipeById, deleteAllRecipes, updateRecipeById, restrictRecipeById, privacityRecipeById, blockRecipeById } from '../controllers/recipes/recipes.controller.js'
+import { createFullRecipe } from '../controllers/fullRecipes/fullRecipes.controller.js'
 
 const router = Router()
 
@@ -12,6 +13,7 @@ const router = Router()
 router.get('/recipes', getAllRecipes)
 router.get('/recipes/:id', getRecipeById)
 router.post('/recipes', createRecipes)
+router.post('/add-recipe', createFullRecipe)
 router.patch('/recipes/:id', authOwnerOrAdmin, updateRecipeById)
 router.patch('/recipes-privacity/:id', authOwnerOrAdmin, privacityRecipeById)
 router.delete('/recipes/:id', authAdmin, deleteRecipeById)

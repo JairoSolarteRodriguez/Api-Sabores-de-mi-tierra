@@ -7,7 +7,7 @@ export const addFavRecipe = async (req, res) => {
       user_id
     } = req.body
 
-    if(!recipe_id, !user_id) return res.status(400).send({ message: `Por favor enviar un usuario y una receta` })
+    if(!recipe_id || !user_id) return res.status(400).send({ message: `Por favor enviar un usuario y una receta` })
 
     const favRecipe = await FavoriteRecipes.create({
       userUserId: user_id,
