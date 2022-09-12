@@ -12,6 +12,8 @@ import { StepRecipes } from '../../models/StepRecipes.js'
 
 import { Recipes } from '../../models/Recipes.js'
 
+import { sequelize } from '../../db/db.js'
+
 export const createFullRecipe = async (req, res) => {
   try {
     const { price } = req.body //Prices
@@ -96,9 +98,32 @@ export const createFullRecipe = async (req, res) => {
       })
     })
 
-    return res.status(200).send({ message: `Se ha Añadido una nueva receta a tu perfil` })
+    return res.status(200).send({ message: newRecipe.dataValues.recipe_id })
 
   } catch (error) {
     return res.status(500).send({ message: `Algo ocurrio ${error}`})
   }
+}
+
+export const getFullRecipeByRecipeId = async (req, res) => {
+  const { recipe_id } = req.params
+
+  const [ recipe ] = await sequelize.query(`
+    SELECT u.user_id, u.username, up.profile_photo,  r.recipe_id, p.price_sufix, d.dificult_name, r.recipe_name, r.recipe_photo, r.recipe_portions, 
+    r.recipe_time, r.recipe_description, r.recipe_privacity 
+    FROM users u 
+    JOIN users_profiles up ON u.user_id = up.user_id 
+    JOIN recipes r ON u.user_id = r.user_id 
+    JOIN prices p ON p.price_id = r.price_id 
+    JOIN dificults d ON d.dificult_id = r.recipe_dificult 
+    WHERE r.recipe_id = ${recipe_id}
+  `)
+
+  const [ steps ] = await sequelize.query(`
+    SELECT * FROM step_recipes WHERE "recipeRecipeId" = ${recipe_id}
+  `)
+
+
+
+  return res.send({ recipe, steps })
 }
