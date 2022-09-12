@@ -4,7 +4,7 @@ import { Router } from 'express'
 import { authAdmin } from '../middlewares/authAdmin.js'
 import { authOwnerOrAdmin } from '../middlewares/authOwnerOrAdmin.js'
 
-import { createRecipes, getRecipeById, getAllRecipes, deleteRecipeById, deleteAllRecipes, updateRecipeById, restrictRecipeById, privacityRecipeById, blockRecipeById } from '../controllers/recipes/recipes.controller.js'
+import { getRecipeById, getAllRecipes, deleteRecipeById, deleteAllRecipes, updateRecipeById, restrictRecipeById, privacityRecipeById, blockRecipeById } from '../controllers/recipes/recipes.controller.js'
 import { createFullRecipe, getFullRecipeByRecipeId } from '../controllers/fullRecipes/fullRecipes.controller.js'
 
 const router = Router()
@@ -12,16 +12,15 @@ const router = Router()
 /*==========Recipes Routes=================*/
 router.get('/recipes', getAllRecipes)
 router.get('/recipes/:id', getRecipeById)
-router.post('/add-recipe', createFullRecipe)
-router.patch('/recipes/:id', authOwnerOrAdmin, updateRecipeById)
-router.patch('/recipes-privacity/:id', authOwnerOrAdmin, privacityRecipeById)
-router.delete('/recipes/:id', authAdmin, deleteRecipeById)
-router.delete('/recipes', authAdmin, deleteAllRecipes)
-router.patch('/recipes-restrict/:id', authAdmin, restrictRecipeById)
-router.patch('/recipes-block/:id', authAdmin, blockRecipeById)
+router.patch('/recipes/:id', updateRecipeById)
+router.patch('/recipes-privacity/:id', privacityRecipeById)
+router.delete('/recipes/:id', deleteRecipeById)
+router.delete('/recipes', deleteAllRecipes)
+router.patch('/recipes-restrict/:id', restrictRecipeById)
+router.patch('/recipes-block/:id', blockRecipeById)
 
 // Full recipes controller.
+router.post('/add-recipe', createFullRecipe)
 router.get('/get-recipes/:recipe_id', getFullRecipeByRecipeId)
-router.post('/recipes', createRecipes)
 
 export default router

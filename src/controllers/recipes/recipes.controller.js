@@ -19,7 +19,7 @@ export const getRecipeById = async (req, res) => {
 
     if (!id) return res.status(400).send({ message: `Por favor enviar un id` })
 
-    const recipes = await Recipes.findOne({ where: { recipe_id: id } })
+    const recipes = await Recipes.findOne({ where: { recipeId: id } })
 
     if (!recipes) return res.status(200).send({ message: `No se ecuentra la receta con el id: ${id}` })
 
@@ -29,68 +29,68 @@ export const getRecipeById = async (req, res) => {
   }
 }
 
-export const createRecipes = async (req, res) => {
-  try {
-    const {
-      user_id,
-      price_id,
-      recipe_dificult,
-      recipe_name,
-      recipe_photo,
-      recipe_portions,
-      recipe_time,
-      recipe_description,
-    } = req.body
+// export const createRecipes = async (req, res) => {
+//   try {
+//     const {
+//       userId,
+//       priceId,
+//       recipeDificult,
+//       recipeName,
+//       recipePhoto,
+//       recipePortions,
+//       recipeTime,
+//       recipeDescription,
+//     } = req.body
 
-    if (!recipe_name | !recipe_description) return res.status(400).send({ message: errorFields })
+//     if (!recipeName | !recipeDescription) return res.status(400).send({ message: errorFields })
 
-    const newRecipe = await Recipes.create({
-      user_id,
-      price_id,
-      recipe_dificult,
-      recipe_name,
-      recipe_photo,
-      recipe_portions,
-      recipe_time,
-      recipe_description
-    })
+//     const newRecipe = await Recipes.create({
+//       userId,
+//       priceId,
+//       recipeDificult,
+//       recipeName,
+//       recipePhoto,
+//       recipePortions,
+//       recipeTime,
+//       recipeDescription
+//     })
 
-    if (newRecipe) return res.status(200).send({ message: `Se ha creado la receta: ${newRecipe.recipe_name}` })
-  } catch (error) {
-    return res.status(500).send({ message: `Ha ocurrido un error ${error}` })
-  }
-}
+//     if (newRecipe) return res.status(200).send({ message: `Se ha creado la receta: ${newRecipe.recipeName}` })
+//   } catch (error) {
+//     return res.status(500).send({ message: `Ha ocurrido un error ${error}` })
+//   }
+// }
 
 export const updateRecipeById = async (req, res) => {
   try {
     const { id } = req.params
     const {
-      user_id,
-      price_id,
-      recipe_dificult,
-      recipe_name,
-      recipe_photo,
-      recipe_portions,
-      recipe_time,
-      recipe_description
+      userId,
+      priceId,
+      recipeDificult,
+      recipeName,
+      recipePhoto,
+      recipePortions,
+      recipeTime,
+      recipeDescription
     } = req.body
 
-    if (!recipe_name | !recipe_description) return res.status(400).send({ message: errorFields })
+    if (!recipeName | !recipeDescription) return res.status(400).send({ message: errorFields })
 
     if (!id) return res.status(400).send({ message: `Por favor enviar un id` })
 
     const recipe = await Recipes.update({
-      user_id,
-      price_id,
-      recipe_dificult,
-      recipe_name,
-      recipe_photo,
-      recipe_portions,
-      recipe_time,
-      recipe_description
+      userId,
+      priceId,
+      recipeDificult,
+      recipeName,
+      recipePhoto,
+      recipePortions,
+      recipeTime,
+      recipeDescription
     }, {
       where: {
-        recipe_id: id
+        recipeId: id
       }
     })
 
@@ -110,7 +110,7 @@ export const deleteRecipeById = async (req, res) => {
 
     const recipes = await Recipes.destroy({
       where: {
-        recipe_id: id
+        recipeId: id
       }
     })
 
@@ -124,9 +124,9 @@ export const deleteRecipeById = async (req, res) => {
 
 export const deleteAllRecipes = async (req, res) => {
   try {
-    const recipes = await Recipes.destroy({ truncate: true })
+    const recipes = await Recipes.destroy({ truncate: { cascade: true } })
 
-    if (!recipes) return res.status(200).send({ message: `Se han eliminado las recetas correctamente` })
+    return res.status(200).send({ message: `Se han eliminado ${recipes} receta(s) correctamente` })
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error: ${error}` })
   }
@@ -136,18 +136,18 @@ export const restrictRecipeById = async (req, res) => {
   try {
     const { id } = req.params
     const {
-      recipe_restricted
+      recipeRestricted
     } = req.body
 
-    if (!recipe_restricted) return res.status(400).send({ message: 'No se recibio ningún cambio de restricción' })
+    if (!recipeRestricted) return res.status(400).send({ message: 'No se recibio ningún cambio de restricción' })
 
     if (!id) return res.status(400).send({ message: `Por favor enviar un id` })
 
     const recipe = await Recipes.update({
-      recipe_restricted
+      recipeRestricted
     }, {
       where: {
-        recipe_id: id
+        recipeId: id
       }
     })
 
@@ -163,18 +163,18 @@ export const blockRecipeById = async (req, res) => {
   try {
     const { id } = req.params
     const {
-      recipe_blocked
+      recipeBlocked
     } = req.body
 
-    if (!recipe_blocked) return res.status(400).send({ message: 'No se recibio ningún cambio de bloqueo' })
+    if (!recipeBlocked) return res.status(400).send({ message: 'No se recibio ningún cambio de bloqueo' })
 
     if (!id) return res.status(400).send({ message: `Por favor enviar un id` })
 
     const recipe = await Recipes.update({
-      recipe_blocked
+      recipeBlocked
     }, {
       where: {
-        recipe_id: id
+        recipeId: id
       }
     })
 
@@ -190,18 +190,18 @@ export const privacityRecipeById = async (req, res) => {
   try {
     const { id } = req.params
     const {
-      recipe_privacity
+      recipePrivacity
     } = req.body
 
-    if (!recipe_privacity) return res.status(400).send({ message: 'No se recibio ningún cambio de privacidad' })
+    if (!recipePrivacity) return res.status(400).send({ message: 'No se recibio ningún cambio de privacidad' })
 
     if (!id) return res.status(400).send({ message: `Por favor enviar un id` })
 
     const recipe = await Recipes.update({
-      recipe_privacity
+      recipePrivacity
     }, {
       where: {
-        recipe_id: id
+        recipeId: id
       }
     })
 
