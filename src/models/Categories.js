@@ -3,13 +3,13 @@ import { sequelize } from "../db/db.js"
 
 
 export const Categories = sequelize.define("categories", {
-  category_id: {
+  categoryId: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,
     allowNull: false,
   },
-  category_name: {
+  categoryName: {
     type: DataTypes.STRING,
     allowNull: false
   }

@@ -108,8 +108,9 @@ export const createFullRecipe = async (req, res) => {
 export const getFullRecipeByRecipeId = async (req, res) => {
   const { recipe_id } = req.params
 
+  // GET recipe
   const [ recipe ] = await sequelize.query(`
-    SELECT u.user_id, u.username, up.profile_photo,  r.recipe_id, p.price_sufix, d.dificult_name, r.recipe_name, r.recipe_photo, r.recipe_portions, 
+    SELECT u.user_id, u.username, up.profile_photo,  r.recipe_id, r."createdAt", p.price_sufix, d.dificult_name, r.recipe_name, r.recipe_photo, r.recipe_portions, 
     r.recipe_time, r.recipe_description, r.recipe_privacity 
     FROM users u 
     JOIN users_profiles up ON u.user_id = up.user_id 
@@ -119,11 +120,64 @@ export const getFullRecipeByRecipeId = async (req, res) => {
     WHERE r.recipe_id = ${recipe_id}
   `)
 
+  // Get Steps
   const [ steps ] = await sequelize.query(`
-    SELECT * FROM step_recipes WHERE "recipeRecipeId" = ${recipe_id}
+    SELECT s.step_id, s.step_number, s.step_image, s.step_description, s."createdAt" FROM step_recipes sr
+    JOIN recipes r ON sr."recipeRecipeId" = r.recipe_id
+    JOIN steps s ON sr."stepStepId" = s.step_id
+    WHERE sr."recipeRecipeId" = ${recipe_id} ORDER BY s.step_number
+  `)
+  
+  // Get categories
+  const [ categories ] = await sequelize.query(`
+    SELECT c.category_id, c.category_name FROM recipe_categories rc 
+    JOIN categories c ON rc."categoryCategoryId" = c.category_id
+    WHERE rc."recipeRecipeId" = ${recipe_id}
   `)
 
+  // Create json step data
+  const formatSteps = steps.map(step => {
+    return {
+      id: step.step_id,
+      number: step.step_number,
+      imagePath: step.step_image,
+      description: step.step_description,
+      createdAt: step.createdAt,
+      // ingredients
+      // tools
+      // measures
+    }
+  })
+  
 
+  //Create json category data
+  const tags = categories.map(category => ({
+    categoryId: category.category_id,
+    name: category.category_name
+  }))
+  
 
-  return res.send({ recipe, steps })
+  const recipeData = recipe[0]
+
+  const data = {
+    recipeId: recipeData.recipe_id,
+    description: recipeData.recipe_description,
+    dificulty: recipeData.dificult_name,
+    imagePath: recipeData.recipe_photo,
+    portions: recipeData.recipe_portions,
+    // ingredients
+    name: recipeData.recipe_name,
+    price: recipeData.price_sufix,
+    steps: formatSteps,
+    tags: tags,
+    time: recipeData.recipe_time,
+    // tools
+    userId: recipeData.user_id,
+    userName: recipeData.username,
+    profileImagePath: recipeData.profile_photo,
+    isPrivate: recipeData.recipe_privacity,
+    createdAt: recipeData.createdAt  
+  }
+  
+  return res.send(formatSteps)
 }
