@@ -3,13 +3,13 @@ import { sequelize } from "../db/db.js"
 
 
 export const Tools = sequelize.define("tools", {
-  tool_id: {
+  toolId: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,
     allowNull: false,
   },
-  tool_name: {
+  toolName: {
     type: DataTypes.STRING,
     allowNull: false
   }

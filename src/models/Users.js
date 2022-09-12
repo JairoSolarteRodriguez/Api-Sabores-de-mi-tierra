@@ -3,45 +3,45 @@ import { sequelize } from "../db/db.js"
 
 // User Schema
 export const User = sequelize.define("users", {
-  user_id: {
+  userId: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,
     allowNull: false,
   },
-  user_email: {
+  userEmail: {
     type: DataTypes.STRING,
     allowNull: false,
     unique: true
   },
-  user_is_staff: {
+  userIsStaff: {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
   },
-  user_is_admin: {
+  userIsAdmin: {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
   },
-  last_login: {
+  lastLogin: {
     type: DataTypes.DATE,
   },
   password: {
     type: DataTypes.CHAR,
     allowNull: false,
   },
-  username: {
+  userName: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  user_is_active: {
+  userIsActive: {
     type: DataTypes.BOOLEAN,
     defaultValue: true,
   },
-  user_restricted: {
+  userRestricted: {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
   },
-  user_blocked: {
+  userBlocked: {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
   },

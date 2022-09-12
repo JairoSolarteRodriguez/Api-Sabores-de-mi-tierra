@@ -4,7 +4,7 @@ export const getAllPrices = async (req, res) => {
   try {
     const prices = await Prices.findAll()
 
-    if(prices) return res.status(200).send({ prices })
+    if(prices) return res.status(200).send( prices )
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error: ${error}` })
   }
@@ -16,11 +16,11 @@ export const getPriceById = async (req, res) => {
 
     if(!id) return res.status(400).send({ message: `Por favor enviar un id` })
 
-    const prices = await Prices.findOne({ where: { price_id : id }})
+    const prices = await Prices.findOne({ where: { priceId : id }})
 
     if(!prices) return res.status(200).send({ message: `No se ecuentra el precio con el id: ${id}` })
 
-    if(prices) return res.status(200).send({ prices })
+    if(prices) return res.status(200).send( prices )
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error: ${error}` })
   }
@@ -29,15 +29,15 @@ export const getPriceById = async (req, res) => {
 export const createPrices = async (req, res) => {
   try {
     const {
-      price_sufix
+      priceSufix
     } = req.body
 
-    if(!price_sufix) return res.status(400).send({ message: `El campo precio no puede ir vacio` })
+    if(!priceSufix) return res.status(400).send({ message: `El campo precio no puede ir vacio` })
   
-    const newPrice = await Prices.create({ price_sufix })
+    const newPrice = await Prices.create({ priceSufix })
   
     console.log(newPrice)
-    if(newPrice) return res.status(200).send({ message: `Se ha creado el sufijo de precio: ${newPrice.price_sufix}` })
+    if(newPrice) return res.status(200).send({ message: `Se ha creado el sufijo de precio: ${newPrice.priceSufix}` })
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error ${error}` })
   }
@@ -46,15 +46,15 @@ export const createPrices = async (req, res) => {
 export const updatePrice = async (req, res) => {
   try {
     const { id }  = req.params
-    const { price_sufix } = req.body
+    const { priceSufix } = req.body
 
-    if(!price_sufix) return res.status(400).send({ message: `El campo precio no puede ir vacio` })
+    if(!priceSufix) return res.status(400).send({ message: `El campo precio no puede ir vacio` })
 
     if(!id) return res.status(400).send({ message: `Por favor enviar un id` })
 
-    const prices = await Prices.update({ price_sufix }, {
+    const prices = await Prices.update({ priceSufix: priceSufix }, {
       where: {
-        price_id: id
+        priceId: id
       }
     })
 
@@ -74,7 +74,7 @@ export const deletePriceById = async (req, res) => {
 
     const price = await Prices.destroy({
       where: {
-        price_id: id
+        priceId: id
       }
     })
 
@@ -88,9 +88,9 @@ export const deletePriceById = async (req, res) => {
 
 export const deleteAllPrices =  async (req, res) => {
   try {
-    const prices = await Prices.destroy({ truncate: true })
+    const prices = await Prices.destroy({ truncate: { cascade: true } })
 
-    if(!prices) return res.status(200).send({ message: `Se han eliminado todos los sufijos para precio correctamente` })
+    return res.status(200).send({ message: `Se han eliminado ${prices} sufijo(s) correctamente` })
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error: ${error}` })
   }

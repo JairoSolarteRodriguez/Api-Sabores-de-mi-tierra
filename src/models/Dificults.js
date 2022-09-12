@@ -3,13 +3,13 @@ import { sequelize } from "../db/db.js"
 
 
 export const Dificult = sequelize.define("dificult", {
-  dificult_id: {
+  dificultId: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,
     allowNull: false,
   },
-  dificult_name: {
+  dificultName: {
     type: DataTypes.STRING,
     allowNull: false
   }

@@ -4,7 +4,7 @@ export const getAllIngredients = async (req, res) => {
   try {
     const ingredients = await Ingredients.findAll()
 
-    if(ingredients) return res.status(200).send({ ingredients })
+    if(ingredients) return res.status(200).send( ingredients )
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error: ${error}` })
   }
@@ -16,11 +16,11 @@ export const getIngredientById = async (req, res) => {
 
     if(!id) return res.status(400).send({ message: `Por favor enviar un id` })
 
-    const ingredients = await Ingredients.findOne({ where: { ingredient_id : id }})
+    const ingredients = await Ingredients.findOne({ where: { ingredientId : id }})
 
     if(!ingredients) return res.status(200).send({ message: `No se ecuentra el ingrediente con el id: ${id}` })
 
-    if(ingredients) return res.status(200).send({ ingredients })
+    if(ingredients) return res.status(200).send( ingredients )
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error: ${error}` })
   }
@@ -29,14 +29,14 @@ export const getIngredientById = async (req, res) => {
 export const createIngredient = async (req, res) => {
   try {
     const {
-      ingredient_name
+      ingredientName
     } = req.body
 
-    if(!ingredient_name) return res.status(400).send({ message: `El campo ingrediente no puede ir vacio` })
+    if(!ingredientName) return res.status(400).send({ message: `El campo ingrediente no puede ir vacio` })
   
-    const newIngredient = await Ingredients.create({ ingredient_name })
+    const newIngredient = await Ingredients.create({ ingredientName })
   
-    if(newIngredient) return res.status(200).send({ message: `Se ha creado el ingrediente: ${newIngredient.ingredient_name}` })
+    if(newIngredient) return res.status(200).send({ message: `Se ha creado el ingrediente: ${newIngredient.ingredientName}` })
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error ${error}` })
   }
@@ -45,15 +45,15 @@ export const createIngredient = async (req, res) => {
 export const updateIngredient = async (req, res) => {
   try {
     const { id }  = req.params
-    const { ingredient_name } = req.body
+    const { ingredientName } = req.body
 
-    if(!ingredient_name) return res.status(400).send({ message: `El campo ingrediente no puede ir vacio` })
+    if(!ingredientName) return res.status(400).send({ message: `El campo ingrediente no puede ir vacio` })
 
     if(!id) return res.status(400).send({ message: `Por favor enviar un id` })
 
-    const ingredient = await Ingredients.update({ ingredient_name }, {
+    const ingredient = await Ingredients.update({ ingredientName }, {
       where: {
-        ingredient_id: id
+        ingredientId: id
       }
     })
 
@@ -73,7 +73,7 @@ export const deleteIngredientById = async (req, res) => {
 
     const ingredient = await Ingredients.destroy({
       where: {
-        ingredient_id: id
+        ingredientId: id
       }
     })
 
@@ -87,9 +87,9 @@ export const deleteIngredientById = async (req, res) => {
 
 export const deleteAllIngredient =  async (req, res) => {
   try {
-    const ingredient = await Ingredients.destroy({ truncate: true })
+    const ingredient = await Ingredients.destroy({ truncate: { cascade: true } })
 
-    if(!ingredient) return res.status(200).send({ message: `Se han eliminado los ingredientes correctamente` })
+    return res.status(200).send({ message: `Se han eliminado ${ingredient} ingrediente(s) correctamente` })
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error: ${error}` })
   }

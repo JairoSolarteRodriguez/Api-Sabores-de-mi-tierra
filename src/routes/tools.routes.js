@@ -11,8 +11,8 @@ const router = Router()
 router.get('/tools', getAllTools)
 router.get('/tools/:id', getToolsById)
 router.post('/tools', createTool)
-router.patch('/tools/:id', authAdmin, updateTool)
-router.delete('/tools', authAdmin, deleteAllTools)
-router.delete('/tools/:id', authAdmin, deleteToolById)
+router.patch('/tools/:id', updateTool)
+router.delete('/tools', deleteAllTools)
+router.delete('/tools/:id', deleteToolById)
 
 export default router

@@ -4,7 +4,7 @@ export const getAllDificults = async (req, res) => {
   try {
     const dificults = await Dificult.findAll()
 
-    if(dificults) return res.status(200).send({ dificults })
+    if(dificults) return res.status(200).send( dificults )
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error: ${error}` })
   }
@@ -16,11 +16,11 @@ export const getDificultById = async (req, res) => {
 
     if(!id) return res.status(400).send({ message: `Por favor enviar un id` })
 
-    const dificult = await Dificult.findOne({ where: { dificult_id : id }})
+    const dificult = await Dificult.findOne({ where: { dificultId : id }})
 
     if(!dificult) return res.status(200).send({ message: `No se ecuentra la dificultad con el id: ${id}` })
 
-    if(dificult) return res.status(200).send({ dificult })
+    if(dificult) return res.status(200).send( dificult )
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error: ${error}` })
   }
@@ -29,14 +29,14 @@ export const getDificultById = async (req, res) => {
 export const createDificult = async (req, res) => {
   try {
     const {
-      dificult_name
+      dificultName
     } = req.body
 
-    if(!dificult_name) return res.status(400).send({ message: `El campo dificulta no puede ir vacio` })
+    if(!dificultName) return res.status(400).send({ message: `El campo dificulta no puede ir vacio` })
   
-    const newDificult = await Dificult.create({ dificult_name })
+    const newDificult = await Dificult.create({ dificultName })
   
-    if(newDificult) return res.status(200).send({ message: `Se ha creado la dificultad: ${ newDificult.dificult_name }` })
+    if(newDificult) return res.status(200).send({ message: `Se ha creado la dificultad: ${ newDificult.dificultName }` })
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error ${error}` })
   }
@@ -45,15 +45,15 @@ export const createDificult = async (req, res) => {
 export const updateDificult = async (req, res) => {
   try {
     const { id }  = req.params
-    const { dificult_name } = req.body
+    const { dificultName } = req.body
 
-    if(!dificult_name) return res.status(400).send({ message: `El campo dificulta no puede ir vacio` })
+    if(!dificultName) return res.status(400).send({ message: `El campo dificulta no puede ir vacio` })
 
     if(!id) return res.status(400).send({ message: `Por favor enviar un id` })
 
-    const dificult = await Dificult.update({ dificult_name }, {
+    const dificult = await Dificult.update({ dificultName }, {
       where: {
-        dificult_id: id
+        dificultId: id
       }
     })
 
@@ -73,7 +73,7 @@ export const deleteDificultById = async (req, res) => {
 
     const dificult = await Dificult.destroy({
       where: {
-        dificult_id: id
+        dificultId: id
       }
     })
 
@@ -87,9 +87,9 @@ export const deleteDificultById = async (req, res) => {
 
 export const deleteAllDificults =  async (req, res) => {
   try {
-    const dificult = await Dificult.destroy({ truncate: true })
+    const dificult = await Dificult.destroy({ truncate: { cascade: true } })
 
-    if(!dificult) return res.status(200).send({ message: `Se han eliminado las dificultades correctamente` })
+    return res.status(200).send({ message: `Se han eliminado ${dificult} dificultad(es) correctamente` })
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error: ${error}` })
   }

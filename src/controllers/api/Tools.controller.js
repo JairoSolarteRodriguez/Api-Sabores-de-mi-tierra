@@ -4,7 +4,7 @@ export const getAllTools = async (req, res) => {
   try {
     const tools = await Tools.findAll()
 
-    if(tools) return res.status(200).send({ tools })
+    if(tools) return res.status(200).send( tools )
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error: ${error}` })
   }
@@ -16,11 +16,11 @@ export const getToolsById = async (req, res) => {
 
     if(!id) return res.status(400).send({ message: `Por favor enviar un id` })
 
-    const tools = await Tools.findOne({ where: { tool_id : id }})
+    const tools = await Tools.findOne({ where: { toolId : id }})
 
     if(!tools) return res.status(200).send({ message: `No se ecuentra el instrumento con el id: ${id}` })
 
-    if(tools) return res.status(200).send({ tools })
+    if(tools) return res.status(200).send( tools )
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error: ${error}` })
   }
@@ -29,14 +29,14 @@ export const getToolsById = async (req, res) => {
 export const createTool = async (req, res) => {
   try {
     const {
-      tool_name
+      toolName
     } = req.body
 
-    if(!tool_name) return res.status(400).send({ message: `El campo instrumento no puede ir vacio` })
+    if(!toolName) return res.status(400).send({ message: `El campo instrumento no puede ir vacio` })
   
-    const newTool = await Tools.create({ tool_name })
+    const newTool = await Tools.create({ toolName })
   
-    if(newTool) return res.status(200).send({ message: `Se ha creado el instrumento: ${newTool.tool_name}` })
+    if(newTool) return res.status(200).send({ message: `Se ha creado el instrumento: ${newTool.toolName}` })
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error ${error}` })
   }
@@ -45,15 +45,15 @@ export const createTool = async (req, res) => {
 export const updateTool = async (req, res) => {
   try {
     const { id }  = req.params
-    const { tool_name } = req.body
+    const { toolName } = req.body
 
-    if(!tool_name) return res.status(400).send({ message: `El campo instrumento no puede ir vacio` })
+    if(!toolName) return res.status(400).send({ message: `El campo instrumento no puede ir vacio` })
 
     if(!id) return res.status(400).send({ message: `Por favor enviar un id` })
 
-    const tools = await Tools.update({ tool_name }, {
+    const tools = await Tools.update({ toolName }, {
       where: {
-        tool_id: id
+        toolId: id
       }
     })
 
@@ -73,7 +73,7 @@ export const deleteToolById = async (req, res) => {
 
     const tool = await Tools.destroy({
       where: {
-        tool_id: id
+        toolId: id
       }
     })
 
@@ -87,9 +87,9 @@ export const deleteToolById = async (req, res) => {
 
 export const deleteAllTools =  async (req, res) => {
   try {
-    const tool = await Tools.destroy({ truncate: true })
+    const tool = await Tools.destroy({ truncate: { cascade: true } })
 
-    if(!tool) return res.status(200).send({ message: `Se han eliminado los instrumentos correctamente` })
+    return res.status(200).send({ message: `Se han eliminado ${tool} instrumento(s) correctamente` })
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error: ${error}` })
   }

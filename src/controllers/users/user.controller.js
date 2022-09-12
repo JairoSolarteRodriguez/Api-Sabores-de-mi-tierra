@@ -35,15 +35,15 @@ export const getUsers = async (req, res) => {
   try {
     const users = await User.findAll({
       attributes: [
-        "user_id",
-        "username",
-        "user_email",
-        "user_is_admin",
-        "user_is_staff",
-        "user_is_active",
-        "last_login",
-        "user_restricted",
-        "user_blocked",
+        "userId",
+        "userName",
+        "userEmail",
+        "userIsAdmin",
+        "userIsStaff",
+        "userIsActive",
+        "lastLogin",
+        "userRestricted",
+        "userBlocked",
         "createdAt",
         "updatedAt",
       ],
@@ -60,24 +60,22 @@ export const getUsers = async (req, res) => {
 export const createUser = async (req, res) => {
   try {
     const {
-      user_email,
-      user_is_staff,
-      user_is_admin,
-      last_login,
+      userEmail,
+      userIsStaff,
+      userIsAdmin,
+      lastLogin,
       password,
-      username,
+      userName,
     } = req.body
 
     // Validate blank fields
-    if (!user_email || !password || !username)
-      return res.status(400).send({ message: errorFields })
+    if (!userEmail || !password || !userName) return res.status(400).send({ message: errorFields })
 
     // Validate correct email
-    if (!validateEmail(user_email))
-      return res.status(400).send({ message: errorInvalidEmail })
+    if (!validateEmail(userEmail)) return res.status(400).send({ message: errorInvalidEmail })
 
     // Validate if exist email
-    const user = await User.findOne({ where: { user_email: user_email } })
+    const user = await User.findOne({ where: { userEmail: userEmail } })
     if (user) return res.status(400).send({ message: errorExistEmail })
 
     // Validate password length
@@ -86,20 +84,20 @@ export const createUser = async (req, res) => {
     const passwordHash = encryptPassword(password) // Encryp password
 
     const newUser = {
-      user_email,
-      user_is_admin,
-      user_is_staff,
-      last_login,
+      userEmail,
+      userIsAdmin,
+      userIsStaff,
+      lastLogin,
       password: passwordHash.trim(),
-      username,
+      userName,
     }
 
     const activationToken = ActivationToken(newUser)
 
-    sendMail(user_email, 'Activación de cuenta sabores de mi tierra', activationToken)
+    sendMail(userEmail, 'Activación de cuenta sabores de mi tierra', activationToken)
 
     return res.status(200).send({
-      message: `Usuario creado, recibirá un correo de activación de cuenta al correo: ${user_email}`,
+      message: `Usuario creado, recibirá un correo de activación de cuenta al correo: ${userEmail}`,
       activationToken,
     })
   } catch (error) {
@@ -117,24 +115,24 @@ export const activationUser = async (req, res) => {
     )
 
     const {
-      user_email,
-      user_is_admin,
-      user_is_staff,
-      last_login,
+      userEmail,
+      userIsAdmin,
+      userIsStaff,
+      lastLogin,
       password,
-      username,
+      userName,
     } = user
 
     const newUser = await User.create({
-      user_email,
-      user_is_admin,
-      user_is_staff,
-      last_login,
+      userEmail,
+      userIsAdmin,
+      userIsStaff,
+      lastLogin,
       password: password.trim(),
-      username,
+      userName,
     })
 
-    if(newUser) return res.status(200).send({ message: "Activación exitosa", data_user: newUser })
+    if(newUser) return res.status(200).send({ message: "Activación exitosa", dataUser: [ newUser.userName, newUser.userEmail ] })
   } catch (error) {
     return res.status(500).send({ message: error })
   }
@@ -142,11 +140,11 @@ export const activationUser = async (req, res) => {
 
 export const login = async (req, res) => {
   try {
-    const { user_email, password } = req.body
+    const { userEmail, password } = req.body
 
-    if(!user_email || !password) return res.status(400).send({ message: errorFields })
+    if(!userEmail || !password) return res.status(400).send({ message: errorFields })
 
-    const user = await User.findOne({ where: {user_email: user_email }})
+    const user = await User.findOne({ where: {userEmail: userEmail }})
 
     if(!user) return res.status(400).send({ message: incorrectUser })
     
@@ -155,26 +153,26 @@ export const login = async (req, res) => {
     
     if(!isMatch) return res.status(400).send({ message: incorrectUser })
     
-    if(user.user_restricted) return res.status(400).send({ message: `El usuario está temporalmente restringido` })
+    if(user.userRestricted) return res.status(400).send({ message: `El usuario está temporalmente restringido` })
 
-    if(user.user_blocked) return res.status(400).send({ message: `El usuario está bloqueado de nuestra aplicación` })
+    if(user.userBlocked) return res.status(400).send({ message: `El usuario está bloqueado de nuestra aplicación` })
     
-    const refresToken = RefreshToken({id: user.user_id})
+    const refresToken = RefreshToken({id: user.userId})
 
     const date = new Date()
     // Update last login
-    await User.update({ last_login: date.toISOString() }, {
+    await User.update({ lastLogin: date.toISOString() }, {
       where: {
-        user_id: user.user_id
+        userId: user.userId
       }
     })
 
     return res.status(200).send({
-      email: user.user_email,
-      user: user.username,
-      user_is_active: !user.user_is_active ? `Tu cuenta esta deshabilitada, desea habilitarla?` : user.user_is_active,
+      email: user.userEmail,
+      user: user.userName,
+      userIsActive: !user.userIsActive ? `Tu cuenta esta deshabilitada, desea habilitarla?` : user.userIsActive,
       accessToken: refresToken,
-      last_login: date.toISOString(),
+      lastLogin: date.toISOString(),
       message: "Inicio de sesión exitoso"
     })
 
@@ -189,19 +187,19 @@ export const verifyForUpdatePassword = async (req, res) => {
 
     if(!email) return res.status(400).send({ message: `Por favor rellene los campos` })  
     
-    const user = await User.findOne({ where: { user_email: email }})
+    const user = await User.findOne({ where: { userEmail: email }})
     
     if(!user || user.length === 0) return res.status(400).send({ message: `El correo ${email} no se encuentra registrado` })
     
     const newUser = {
-      id: user.user_id,
-      username: user.username,
-      user_email: user.user_email
+      id: user.userId,
+      userName: user.userName,
+      userEmail: user.userEmail
     }
     
     const token = ActivationToken(newUser)
-    sendMail(user.user_email, `Cambio de contraseña`, token, true)
-    return res.status(200).send({ message: `Verifique su correo (${user.user_email}) para cambiar la contraseña` })
+    sendMail(user.userEmail, `Cambio de contraseña`, token, true)
+    return res.status(200).send({ message: `Verifique su correo (${user.userEmail}) para cambiar la contraseña` })
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error ${error}` })    
   }
@@ -211,7 +209,7 @@ export const updatePassword = async(req, res) => {
   try {
     const { email, token, password, passwordConfirm } = req.body
   
-    const user = await User.findOne({ where: { user_email: email }})
+    const user = await User.findOne({ where: { userEmail: email }})
     if(!user || user.length === 0) return res.status(400).send({ message: `El correo electrónico no es válido por favor realizar el proceso nuevamente` })
     
     const verifyEmail = jwt.verify(token, ACTIVATION_TOKEN_SECRET)
@@ -222,16 +220,16 @@ export const updatePassword = async(req, res) => {
     if(password !== passwordConfirm) return res.status(400).send({ message: `Las contraseñas no coinciden` })
     const newPassword = encryptPassword(password)
   
-    if(user.user_email === verifyEmail.user_email){
-      const correctEmail = user.user_email
+    if(user.userEmail === verifyEmail.userEmail){
+      const correctEmail = user.userEmail
   
       await User.update({ password: newPassword }, {
         where: {
-          user_email: correctEmail
+          userEmail: correctEmail
         }
       })
   
-      return res.status(200).send({ message: `contraseña ha sido cambiada` })
+      return res.status(200).send({ message: `contraseña Actualizada` })
     }
 
     return res.status(400).send({ message: `Ha ocurrido un error por favor realizar el proceso nuevamente` })
@@ -247,7 +245,7 @@ export const deleteUser = async(req, res) => {
 
     const deleted = await User.destroy({
       where: {
-        user_id: userId
+        userId: userId
       }
     })
     
@@ -267,9 +265,9 @@ export const disableUser = async(req, res) => { // Disabled a user
     const { id } = req.params
     const userId = parseInt(id)
 
-    const updatedUser = await User.update({ user_is_active: isActive }, {
+    const updatedUser = await User.update({ userIsActive: isActive }, {
       where: {
-        user_id: userId
+        userId: userId
       }
     })
 

@@ -4,22 +4,22 @@ import { sequelize } from "../db/db.js"
 import { User } from "./Users.js"
 
 export const UserProfile = sequelize.define("users_profile", {
-  profile_id: {
+  profileId: {
     type: DataTypes.INTEGER,
     primaryKey:true,
     autoIncrement: true,
   },
-  profile_stars:{
+  score:{
     type: DataTypes.INTEGER,
     defaultValue: 0,
   },
-  profile_name:{
+  profileName:{
     type: DataTypes.CHAR,
   },
-  profile_birth_date:{
+  profileBirthDate:{
     type: DataTypes.DATE,
   },
-  profile_photo:{
+  profilePhoto:{
     type: DataTypes.TEXT
   },
 },{
@@ -29,10 +29,10 @@ export const UserProfile = sequelize.define("users_profile", {
 User.hasOne(UserProfile, {
   onDelete: 'CASCADE',
   onUpdate: 'CASCADE',
-  foreignKey: 'user_id',
+  foreignKey: 'userId',
 })
 
 UserProfile.belongsTo(User, {
-  foreignKey: 'user_id',
-  targetId: 'profile_id',
+  foreignKey: 'userId',
+  targetId: 'profileId',
 })

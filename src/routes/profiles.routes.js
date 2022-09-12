@@ -11,7 +11,7 @@ const router = Router()
 /*==========Profile Routes=================*/
 router.get('/user-profile', authAdmin)
 router.get('/profile/:id')
-router.get('/info/:id', authOwnerOrAdmin, getProfileInfo)
+router.get('/info/:id', getProfileInfo)
 router.get('/userprofile/:id')
 router.post('/profile', createProfile)
 

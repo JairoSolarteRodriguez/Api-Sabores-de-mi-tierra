@@ -24,7 +24,7 @@ const PORT = process.env.PORT || 3000
 
 async function main() {
   try {
-    // // await sequelize.sync({ force: true })
+    // await sequelize.sync({ force: true })
     await sequelize.sync()
     console.log("Connection has been established successfully.")
     app.listen(PORT, () => {
