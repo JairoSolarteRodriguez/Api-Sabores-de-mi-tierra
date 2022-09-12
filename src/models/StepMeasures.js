@@ -5,7 +5,7 @@ import { Steps } from "./Steps.js"
 import { Measures } from "./Measures.js"
 
 export const StepMeasures = sequelize.define('step_measures', {
-  step_measure_id: {
+  stepMeasureId: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,

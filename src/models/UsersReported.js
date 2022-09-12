@@ -3,19 +3,19 @@ import { sequelize } from "../db/db.js"
 import { User } from "./Users.js"
 
 export const UserReported = sequelize.define("users_reported",{
-  user_reported_id: {
+  userReportedId: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,
     allowNull: false,
   },
-  user_reported_comment: {
+  userReportedComment: {
     type: DataTypes.STRING,
   },
-  user_reported_date: {
+  userReportedDate: {
     type: DataTypes.DATE,
   },
-  user_report_active: {
+  userReportActive: {
     type: DataTypes.BOOLEAN,
     defaultValue: true
   },
@@ -26,21 +26,21 @@ export const UserReported = sequelize.define("users_reported",{
 User.hasOne(UserReported, {
   onDelete: 'CASCADE',
   onUpdate: 'CASCADE',
-  foreignKey: 'user_reported',
+  foreignKey: 'userReported',
 })
 
 User.hasOne(UserReported, {
   onDelete: 'CASCADE',
   onUpdate: 'CASCADE',
-  foreignKey: 'user_report',
+  foreignKey: 'userReport',
 })
 
 UserReported.belongsTo(User, {
-  foreignKey: 'user_reported',
-  targetId: 'user_reported_id',
+  foreignKey: 'userReported',
+  targetId: 'userReportedId',
 })
 
 UserReported.belongsTo(User, {
-  foreignKey: 'user_report',
-  targetId: 'user_reported_id',
+  foreignKey: 'userReport',
+  targetId: 'userReportedId',
 })

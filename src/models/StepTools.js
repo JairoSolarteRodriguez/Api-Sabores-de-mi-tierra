@@ -5,7 +5,7 @@ import { Steps } from "./Steps.js"
 import { Tools } from "./Tools.js"
 
 export const StepTools = sequelize.define('step_tools', {
-  step_tool_id: {
+  stepToolId: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,

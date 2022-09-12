@@ -5,7 +5,7 @@ import { Recipes } from "./Recipes.js"
 import { Categories } from "./Categories.js"
 
 export const RecipeCategories = sequelize.define('recipe_categories', {
-  recipe_category_id: {
+  recipeCategoryId: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,

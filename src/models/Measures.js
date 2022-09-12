@@ -3,13 +3,13 @@ import { sequelize } from "../db/db.js"
 
 
 export const Measures = sequelize.define("measures", {
-  measure_id: {
+  measureId: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,
     allowNull: false,
   },
-  measure_sufix: {
+  measureSufix: {
     type: DataTypes.STRING,
     allowNull: false
   }

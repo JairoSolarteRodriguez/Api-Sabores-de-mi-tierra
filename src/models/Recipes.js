@@ -6,53 +6,53 @@ import { Dificult } from './Dificults.js'
 
 
 export const Recipes = sequelize.define("recipes", {
-    recipe_id: {
+    recipeId: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
         allowNull: false
     },
-    user_id: {
+    userId: {
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    price_id: {
+    priceId: {
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    recipe_dificult: {
+    recipeDificult: {
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    recipe_name: {
+    recipeName: {
         type: DataTypes.STRING(100),
         allowNull: false
     },
-    recipe_photo: {
+    recipePhoto: {
         type: DataTypes.STRING,
     },
-    recipe_portions: {
+    recipePortions: {
         type: DataTypes.INTEGER
     },
-    recipe_time: {
+    recipeTime: {
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    recipe_description: {
+    recipeDescription: {
         type: DataTypes.TEXT,
         allowNull: false
     },
-    recipe_restricted: {
+    recipeRestricted: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false
     },
-    recipe_blocked: {
+    recipeBlocked: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false
     },
-    recipe_privacity: {
+    recipePrivacity: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false
@@ -68,28 +68,28 @@ User.hasMany(Recipes,{
 })
 
 Recipes.belongsTo(User,{
-    foreignKey: 'user_id',
-    targetId: 'recipe_id'
+    foreignKey: 'userId',
+    targetId: 'recipeId'
 })
 
 //Price
 Prices.hasOne(Recipes,{
-    foreignKey: 'price_id',
-    sourceKeys: 'recipe_id'
+    foreignKey: 'priceId',
+    sourceKeys: 'recipeId'
 })
 
 Recipes.belongsTo(Prices,{
-    foreignKey: 'price_id',
-    targetId: 'recipe_id'
+    foreignKey: 'priceId',
+    targetId: 'recipeId'
 })
 
 //Dificult
 Dificult.hasOne(Recipes,{
-    foreignKey: 'recipe_dificult',
-    sourceKeys: 'recipe_id'
+    foreignKey: 'recipeDificult',
+    sourceKeys: 'recipeId'
 })
 
 Recipes.belongsTo(Dificult,{
-    foreignKey: 'recipe_dificult',
-    targetId: 'recipe_id'
+    foreignKey: 'recipeDificult',
+    targetId: 'recipeId'
 })

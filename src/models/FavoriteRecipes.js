@@ -5,7 +5,7 @@ import { User } from "./Users.js"
 import { Recipes } from "./Recipes.js"
 
 export const FavoriteRecipes = sequelize.define('favorite_recipes', {
-  favorite_recipe_id: {
+  favoriteRecipeId: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,

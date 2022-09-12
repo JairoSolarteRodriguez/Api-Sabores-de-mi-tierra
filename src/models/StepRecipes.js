@@ -5,7 +5,7 @@ import { Steps } from "./Steps.js"
 import { Recipes } from "./Recipes.js"
 
 export const StepRecipes = sequelize.define('step_recipes', {
-  step_recipe_id: {
+  stepRecipeId: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,

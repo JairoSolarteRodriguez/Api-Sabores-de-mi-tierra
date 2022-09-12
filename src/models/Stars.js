@@ -5,21 +5,21 @@ import { User } from "./Users.js"
 
 
 export const Stars = sequelize.define("stars", {
-    recipe_stars_id: {
+    recipeStarsId: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
         allowNull: false,
     },
-    user_id: {
+    userId: {
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    recipe_id: {
+    recipeId: {
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    recipe_start_quantity: {
+    recipeStartQuantity: {
         type: DataTypes.FLOAT,
         allowNull: false
     }
@@ -29,23 +29,23 @@ export const Stars = sequelize.define("stars", {
 
 //User
 User.hasMany(Stars,{
-    foreignKey: 'user_id',
-    sourceKeys: 'recipe_stars_id'
+    foreignKey: 'userId',
+    sourceKeys: 'recipeStarsId'
 })
 
 Stars.belongsTo(User,{
-    foreignKey: 'user_id',
-    targetId: 'recipe_stars_id'
+    foreignKey: 'userId',
+    targetId: 'recipeStarsId'
 })
 
 //Recipes
 Recipes.hasMany(Stars,{
-    foreignKey: 'recipe_id',
-    sourceKeys: 'recipe_stars_id'
+    foreignKey: 'recipeId',
+    sourceKeys: 'recipeStarsId'
 })
 
 Stars.belongsTo(Recipes,{
-    foreignKey: 'recipe_id',
-    targetId: 'recipe_stars_id'
+    foreignKey: 'recipeId',
+    targetId: 'recipeStarsId'
 })
 

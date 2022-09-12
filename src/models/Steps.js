@@ -2,20 +2,20 @@ import { DataTypes } from "sequelize"
 import { sequelize } from "../db/db.js"
 
 export const Steps = sequelize.define("steps", {
-  step_id: {
+  stepId: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,
     allowNull: false,
   },
-  step_number: {
+  stepNumber: {
     type: DataTypes.INTEGER,
     allowNull: false
   },
-  step_image: {
+  stepImage: {
     type: DataTypes.TEXT,
   },
-  step_description: {
+  stepDescription: {
     type: DataTypes.TEXT,
     allowNull: false
   }
