@@ -6,11 +6,11 @@ export const getStepById = async (req, res) => {
 
     if(!id) return res.status(400).send({ message: `Por favor enviar un id` })
 
-    const step = await Steps.findOne({ where: { step_id: id } })
+    const step = await Steps.findOne({ where: { stepId: id } })
 
     if(!step) return res.status(400).send({ message: `No se encuentra el paso` })
 
-    if(step) return res.status(200).send({ step })
+    if(step) return res.status(200).send( step )
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error ${error}` })
   }
@@ -19,17 +19,17 @@ export const getStepById = async (req, res) => {
 export const createStep = async (req, res) => {
   try {
     const {
-      step_number,
-      step_image,
-      step_description,
+      stepNumber,
+      stepImage,
+      stepDescription,
     } = req.body
     
-    if(!step_number || !step_description) return res.status(400).send({ message: `Los campos número de paso y descripción son obligatorios`})
+    if(!stepNumber || !stepDescription) return res.status(400).send({ message: `Los campos número de paso y descripción son obligatorios`})
 
     const newStep = await Steps.create({
-      step_number,
-      step_image,
-      step_description
+      stepNumber,
+      stepImage,
+      stepDescription
     })
 
 
@@ -38,19 +38,19 @@ export const createStep = async (req, res) => {
     return res.status(500).send({ message: `Ha ocurrido un error ${error}` })
   }
 }
-//TODO: arreglar la actualización del owner
+
 export const updateStepDescription = async (req, res) => {
   try {
     const { id } = req.params
-    const { step_description } = req.body
+    const { stepDescription } = req.body
   
     if(!id) return res.status(400).send({ message: `Por favor enviar el id` })
   
-    if(!step_description) return res.status(400).send({ message: `Campo descripcion requerido` })
+    if(!stepDescription) return res.status(400).send({ message: `Campo descripcion requerido` })
   
-    const step = await Steps.update({ step_description }, {
+    const step = await Steps.update({ stepDescription }, {
       where: {
-        step_id: id
+        stepId: id
       }
     })
   
@@ -61,19 +61,19 @@ export const updateStepDescription = async (req, res) => {
     return res.status(500).send({ message: `Ha ocurrido un error: ${error}` })
   }
 }
-//TODO: arreglar la actualización del owner
+
 export const updateStepImage = async (req, res) => {
   try {
     const { id } = req.params
-    const { step_image } = req.body
+    const { stepImage } = req.body
   
     if(!id) return res.status(400).send({ message: `Por favor enviar el id` })
   
-    if(!step_image) return res.status(400).send({ message: `Campo imagen requerido` })
+    if(!stepImage) return res.status(400).send({ message: `Campo imagen requerido` })
   
-    const step = await Steps.update({ step_image }, {
+    const step = await Steps.update({ stepImage }, {
       where: {
-        step_id: id
+        stepId: id
       }
     })
   
@@ -84,7 +84,7 @@ export const updateStepImage = async (req, res) => {
     return res.status(500).send({ message: `Ha ocurrido un error: ${error}` })
   }
 }
-//TODO: arreglar la eliminación del owner
+
 export const deleteStepById = async (req, res) => {
   try {
     const { id } = req.params
@@ -93,13 +93,13 @@ export const deleteStepById = async (req, res) => {
 
     const step = await Steps.destroy({
       where: {
-        step_id: id
+        stepId: id
       }
     })
 
     if(step === 0 ) return res.status(400).send({ message: `No se encuenta el paso` })
 
-    if(step === 1 ) return res.status(200).send({ message: `Se ha eliminado el paso` })
+    if(step >= 1 ) return res.status(200).send({ message: `Se ha eliminado el paso` })
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error: ${error}` })
   }

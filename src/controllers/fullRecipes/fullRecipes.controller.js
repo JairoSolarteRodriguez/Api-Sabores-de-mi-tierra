@@ -149,17 +149,18 @@ export const getFullRecipeByRecipeId = async (req, res) => {
     }
   })
 
-  console.log(formatSteps)
-  
-
   //Create json category data
   const tags = categories.map(category => ({
     categoryId: category.categoryId,
     name: category.categoryName
   }))
   
-
   const recipeData = recipe[0]
+
+  // Get Recipe Score
+  const [ score ] = await sequelize.query(`
+    SELECT s."recipeId", AVG(s."recipeStartQuantity") score FROM stars s WHERE s."recipeId" = ${recipeData.recipeId} GROUP BY s."recipeId"
+  `)
 
   const data = {
     recipeId: recipeData.recipeId,
@@ -173,6 +174,7 @@ export const getFullRecipeByRecipeId = async (req, res) => {
     steps: formatSteps,
     tags: tags,
     time: recipeData.recipeTime,
+    score: score[0],
     // tools
     userId: recipeData.userId,
     userName: recipeData.userName,

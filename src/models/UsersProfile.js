@@ -10,7 +10,7 @@ export const UserProfile = sequelize.define("users_profile", {
     autoIncrement: true,
   },
   score:{
-    type: DataTypes.INTEGER,
+    type: DataTypes.FLOAT,
     defaultValue: 0,
   },
   profileName:{

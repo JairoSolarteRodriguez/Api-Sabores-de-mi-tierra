@@ -14,9 +14,9 @@ export const authAdmin = async (req, res, next) => {
     const userToken = jwt.verify(authorizationToken, REFRESH_TOKEN_SECRET)
     if(!userToken) return res.status(400).send({ message: `Autorización invalida` })
     
-    const user = await User.findOne({ where: {user_id: userToken.id }})
+    const user = await User.findOne({ where: {userId: userToken.id }})
 
-    if(user.user_is_admin || user.user_is_staff){
+    if(user.userIsAdmin || user.userIsStaff){
       next()
     }else{
       return res.status(401).send({message: `Autorización invalida`})

@@ -4,7 +4,6 @@ import { User } from "../../models/Users.js"
 export const createProfile = async (req, res) => {
   try {
     const {
-      score,
       profileName,
       profileBirthDate,
       profilePhoto,
@@ -18,7 +17,6 @@ export const createProfile = async (req, res) => {
     if(profile) return res.status(400).send({ message: `El usuario ya tiene un perfil asignado` })
 
     const newProfile = await UserProfile.create({
-      score,
       profileName,
       profileBirthDate,
       profilePhoto,
