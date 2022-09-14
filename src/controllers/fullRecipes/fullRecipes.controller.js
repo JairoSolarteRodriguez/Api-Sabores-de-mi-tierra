@@ -106,98 +106,105 @@ export const createFullRecipe = async (req, res) => {
 }
 
 export const getFullRecipeByRecipeId = async (req, res) => {
-  const { recipe_id } = req.params
+  try {
+    const { recipe_id } = req.params
 
-  // GET recipe
-  const [ recipe ] = await sequelize.query(`
-    SELECT u."userId", u."userName", up."profilePhoto",  r."recipeId", r."createdAt", p."priceSufix", d."dificultName", r."recipeName", r."recipePhoto", r."recipePortions", 
-    r."recipeTime", r."recipeDescription", r."recipePrivacity" 
-    FROM users u 
-    JOIN users_profiles up ON u."userId" = up."userId"
-    JOIN recipes r ON u."userId" = r."userId" 
-    JOIN prices p ON p."priceId" = r."priceId" 
-    JOIN dificults d ON d."dificultId" = r."recipeDificult"
-    WHERE r."recipeId" = ${recipe_id}
-  `)
-
-  // Get Steps
-  const [ steps ] = await sequelize.query(`
-    SELECT s."stepId", s."stepNumber", s."stepImage", s."stepDescription", s."createdAt" FROM step_recipes sr
-    JOIN recipes r ON sr."recipeRecipeId" = r."recipeId"
-    JOIN steps s ON sr."stepStepId" = s."stepId"
-    WHERE sr."recipeRecipeId" = ${recipe_id} ORDER BY s."stepNumber"
-  `)
-  
-  // Get categories
-  const [ categories ] = await sequelize.query(`
-    SELECT c."categoryId", c."categoryName" FROM recipe_categories rc  
-    JOIN categories c ON rc."categoryCategoryId" = c."categoryId"
-    WHERE rc."recipeRecipeId" = ${recipe_id}
-  `)
-  
-  const stepsId = []
-  const stepsData = []
-  
-  // Create json step data
-  steps.map(async (step) => {
-    stepsId.push(step.stepId)
-    
-    const [ tools ]  = await sequelize.query(`
-      SELECT st."stepStepId", t."toolId", t."toolName" FROM step_tools st
-      JOIN tools t ON st."toolToolId" = t."toolId" WHERE st."stepStepId" IN (${step.stepId})
+    // GET recipe
+    const [ recipe ] = await sequelize.query(`
+      SELECT u."userId", u."userName", up."profilePhoto",  r."recipeId", r."createdAt", p."priceSufix", d."dificultName", r."recipeName", r."recipePhoto", r."recipePortions", 
+      r."recipeTime", r."recipeDescription", r."recipePrivacity" 
+      FROM users u 
+      JOIN users_profiles up ON u."userId" = up."userId"
+      JOIN recipes r ON u."userId" = r."userId" 
+      JOIN prices p ON p."priceId" = r."priceId" 
+      JOIN dificults d ON d."dificultId" = r."recipeDificult"
+      WHERE r."recipeId" = ${recipe_id}
     `)
 
-    stepsData.push({
-      id: step.stepId,
-      number: step.stepNumber,
-      imagePath: step.stepImage,
-      description: step.stepDescription,
-      createdAt: step.createdAt,
-      // ingredients
-      tools: tools
+    if(!recipe || recipe.length === 0) return res.status(400).send({ message: `La receta ${recipe_id} no existe` })
+
+    // Get Steps
+    const [ steps ] = await sequelize.query(`
+      SELECT s."stepId", s."stepNumber", s."stepImage", s."stepDescription", s."createdAt" FROM step_recipes sr
+      JOIN recipes r ON sr."recipeRecipeId" = r."recipeId"
+      JOIN steps s ON sr."stepStepId" = s."stepId"
+      WHERE sr."recipeRecipeId" = ${recipe_id} ORDER BY s."stepNumber"
+    `)
+    
+    // Get categories
+    const [ categories ] = await sequelize.query(`
+      SELECT c."categoryId", c."categoryName" FROM recipe_categories rc  
+      JOIN categories c ON rc."categoryCategoryId" = c."categoryId"
+      WHERE rc."recipeRecipeId" = ${recipe_id}
+    `)
+    
+    const stepsId = []
+    const stepsData = []
+    
+    // Create json step data
+    steps.map(async (step) => {
+      stepsId.push(step.stepId)
+      
+      const [ tools ]  = await sequelize.query(`
+        SELECT st."stepStepId", t."toolId", t."toolName" FROM step_tools st
+        JOIN tools t ON st."toolToolId" = t."toolId" WHERE st."stepStepId" IN (${step.stepId})
+      `)
+
+      stepsData.push({
+        id: step.stepId,
+        number: step.stepNumber,
+        imagePath: step.stepImage,
+        description: step.stepDescription,
+        createdAt: step.createdAt,
+        // ingredients
+        tools: tools
+      })
     })
-  })
 
-  // get all utincils by steps on recipes
-  const [ allTools ] = await sequelize.query(`
-    SELECT t."toolId", t."toolName" FROM step_tools st
-    JOIN tools t ON st."toolToolId" = t."toolId" WHERE st."stepStepId" IN (${stepsId.map(s => s)})
-  `)
+    // get all utincils by steps on recipes
+    const [ allTools ] = await sequelize.query(`
+      SELECT t."toolId", t."toolName" FROM step_tools st
+      JOIN tools t ON st."toolToolId" = t."toolId" WHERE st."stepStepId" IN (${stepsId.map(s => s)})
+    `)
 
-  //Create json category data
-  const tags = categories.map(category => ({
-    categoryId: category.categoryId,
-    name: category.categoryName
-  }))
-  
-  const recipeData = recipe[0]
+    //Create json category data
+    const tags = categories.map(category => ({
+      categoryId: category.categoryId,
+      name: category.categoryName
+    }))
+    
+    const recipeData = recipe[0]
 
-  // Get Recipe Score
-  const [ score ] = await sequelize.query(`
-    SELECT s."recipeId", AVG(s."recipeStartQuantity") score FROM stars s WHERE s."recipeId" = ${recipeData.recipeId} GROUP BY s."recipeId"
-  `)
+    // Get Recipe Score
+    const [ score ] = await sequelize.query(`
+      SELECT s."recipeId", AVG(s."recipeStartQuantity") score FROM stars s WHERE s."recipeId" = ${recipeData.recipeId} GROUP BY s."recipeId"
+    `)
 
-  const data = {
-    recipeId: recipeData.recipeId,
-    recipeCompleteTools: allTools,
-    description: recipeData.recipeDescription,
-    dificulty: recipeData.dificultName,
-    imagePath: recipeData.recipePhoto,
-    portions: recipeData.recipePortions,
-    // ingredients
-    name: recipeData.recipeName,
-    price: recipeData.priceSufix,
-    steps: stepsData,
-    tags: tags,
-    time: recipeData.recipeTime,
-    score: score[0].score,
-    // tools
-    userId: recipeData.userId,
-    userName: recipeData.userName,
-    profileImagePath: recipeData.profilePhoto,
-    isPrivate: recipeData.recipePrivacity,
-    createdAt: recipeData.createdAt  
+    const data = {
+      recipeId: recipeData.recipeId,
+      recipeCompleteTools: allTools,
+      description: recipeData.recipeDescription,
+      dificulty: recipeData.dificultName,
+      imagePath: recipeData.recipePhoto,
+      portions: recipeData.recipePortions,
+      // ingredients
+      name: recipeData.recipeName,
+      price: recipeData.priceSufix,
+      steps: stepsData,
+      tags: tags,
+      time: recipeData.recipeTime,
+      score: score[0].score,
+      // tools
+      userId: recipeData.userId,
+      userName: recipeData.userName,
+      profileImagePath: recipeData.profilePhoto,
+      isPrivate: recipeData.recipePrivacity,
+      createdAt: recipeData.createdAt  
+    }
+    
+    return res.status(200).send(data)
+  } catch (error) {
+    return res.status(500).send({ message: `Ha ocurrido un error ${error}` })
   }
   
-  return res.send(data)
 }
