@@ -113,7 +113,7 @@ export const getFullRecipeByRecipeId = async (req, res) => {
 
     // GET recipe
     const [ recipe ] = await sequelize.query(`
-      SELECT u."userId", u."userName", up."profilePhoto",  r."recipeId", r."createdAt", p."priceSufix", d."dificultName", r."recipeName", r."recipePhoto", r."recipePortions", 
+      SELECT u."userId", u."userName", up."profilePhoto", up."score", r."recipeId", r."createdAt", p."priceSufix", d."dificultName", r."recipeName", r."recipePhoto", r."recipePortions", 
       r."recipeTime", r."recipeDescription", r."recipePrivacity" 
       FROM users u 
       JOIN users_profiles up ON u."userId" = up."userId"
@@ -215,7 +215,8 @@ export const getFullRecipeByRecipeId = async (req, res) => {
       steps: stepsData,
       tags: tags,
       time: recipeData.recipeTime,
-      score: score.length === 0 ? 0 : score[0].score,
+      recipeScore: score.length === 0 ? 0 : score[0].score,
+      userScore: recipeData.score,
       userId: recipeData.userId,
       userName: recipeData.userName,
       profileImagePath: recipeData.profilePhoto,
