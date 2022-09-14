@@ -134,20 +134,35 @@ export const getFullRecipeByRecipeId = async (req, res) => {
     JOIN categories c ON rc."categoryCategoryId" = c."categoryId"
     WHERE rc."recipeRecipeId" = ${recipe_id}
   `)
-
+  
+  const stepsId = []
+  const stepsData = []
+  
   // Create json step data
-  const formatSteps = steps.map(step => {
-    return {
+  steps.map(async (step) => {
+    stepsId.push(step.stepId)
+    
+    const [ tools ]  = await sequelize.query(`
+      SELECT st."stepStepId", t."toolId", t."toolName" FROM step_tools st
+      JOIN tools t ON st."toolToolId" = t."toolId" WHERE st."stepStepId" IN (${step.stepId})
+    `)
+
+    stepsData.push({
       id: step.stepId,
       number: step.stepNumber,
       imagePath: step.stepImage,
       description: step.stepDescription,
       createdAt: step.createdAt,
       // ingredients
-      // tools
-      // measures
-    }
+      tools: tools
+    })
   })
+
+  // get all utincils by steps on recipes
+  const [ allTools ] = await sequelize.query(`
+    SELECT t."toolId", t."toolName" FROM step_tools st
+    JOIN tools t ON st."toolToolId" = t."toolId" WHERE st."stepStepId" IN (${stepsId.map(s => s)})
+  `)
 
   //Create json category data
   const tags = categories.map(category => ({
@@ -164,6 +179,7 @@ export const getFullRecipeByRecipeId = async (req, res) => {
 
   const data = {
     recipeId: recipeData.recipeId,
+    recipeCompleteTools: allTools,
     description: recipeData.recipeDescription,
     dificulty: recipeData.dificultName,
     imagePath: recipeData.recipePhoto,
@@ -171,10 +187,10 @@ export const getFullRecipeByRecipeId = async (req, res) => {
     // ingredients
     name: recipeData.recipeName,
     price: recipeData.priceSufix,
-    steps: formatSteps,
+    steps: stepsData,
     tags: tags,
     time: recipeData.recipeTime,
-    score: score[0],
+    score: score[0].score,
     // tools
     userId: recipeData.userId,
     userName: recipeData.userName,
