@@ -68,7 +68,9 @@ export const createFullRecipe = async (req, res) => {
       // Save ingredients and ingredient Step relations
       ingredients.map(async (ingredient) => {
         const newIngredient = await Ingredients.create({
-          ingredientName: ingredient
+          ingredientName: ingredient.name,
+          quantity: ingredient.quantity,
+          measureId: ingredient.unit
         })
   
         // Save relations steps and ingredients in intermediate table
@@ -138,33 +140,53 @@ export const getFullRecipeByRecipeId = async (req, res) => {
       WHERE rc."recipeRecipeId" = ${recipe_id}
     `)
     
+    // auxiliar variables
     const stepsId = []
     const stepsData = []
     
     // Create json step data
     steps.map(async (step) => {
+      // send step id's for get all tools
       stepsId.push(step.stepId)
       
+      // Get tools by step id
       const [ tools ]  = await sequelize.query(`
         SELECT st."stepStepId", t."toolId", t."toolName" FROM step_tools st
         JOIN tools t ON st."toolToolId" = t."toolId" WHERE st."stepStepId" IN (${step.stepId})
       `)
 
+      // Get ingredients by step id
+      const [ ingredients ] = await sequelize.query(`
+        SELECT i."ingredientId", i."quantity", m."measureName", i."ingredientName" FROM step_ingredients si 
+        JOIN ingredients i ON si."ingredientIngredientId" = i."ingredientId"
+        JOIN measures m ON i."measureId" = m."measureId"
+        WHERE si."stepStepId" IN (${step.stepId})
+      `)
+
+      // Send data to auxiliar variable
       stepsData.push({
         id: step.stepId,
         number: step.stepNumber,
         imagePath: step.stepImage,
         description: step.stepDescription,
         createdAt: step.createdAt,
-        // ingredients
+        ingredients: ingredients,
         tools: tools
       })
     })
 
-    // get all utincils by steps on recipes
+    // get all utincils on recipes
     const [ allTools ] = await sequelize.query(`
       SELECT t."toolId", t."toolName" FROM step_tools st
       JOIN tools t ON st."toolToolId" = t."toolId" WHERE st."stepStepId" IN (${stepsId.map(s => s)})
+    `)
+
+    // get all ingredients on recipes
+    const [ allIngredients ] = await sequelize.query(`
+      SELECT i."ingredientId", i."quantity", m."measureName", i."ingredientName" FROM step_ingredients si 
+      JOIN ingredients i ON si."ingredientIngredientId" = i."ingredientId"
+      JOIN measures m ON i."measureId" = m."measureId"
+      WHERE si."stepStepId" IN (${stepsId.map(s => s)})
     `)
 
     //Create json category data
@@ -182,19 +204,18 @@ export const getFullRecipeByRecipeId = async (req, res) => {
 
     const data = {
       recipeId: recipeData.recipeId,
+      recipeCompleteIngredients: allIngredients,
       recipeCompleteTools: allTools,
       description: recipeData.recipeDescription,
       dificulty: recipeData.dificultName,
       imagePath: recipeData.recipePhoto,
       portions: recipeData.recipePortions,
-      // ingredients
       name: recipeData.recipeName,
       price: recipeData.priceSufix,
       steps: stepsData,
       tags: tags,
       time: recipeData.recipeTime,
-      score: score[0].score,
-      // tools
+      score: score.length === 0 ? 0 : score[0].score,
       userId: recipeData.userId,
       userName: recipeData.userName,
       profileImagePath: recipeData.profilePhoto,

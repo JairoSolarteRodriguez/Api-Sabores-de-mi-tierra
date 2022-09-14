@@ -9,7 +9,7 @@ export const Measures = sequelize.define("measures", {
     autoIncrement: true,
     allowNull: false,
   },
-  measureSufix: {
+  measureName: {
     type: DataTypes.STRING,
     allowNull: false
   }
