@@ -36,7 +36,6 @@ export const createCategory = async (req, res) => {
   
     const newCategory = await Categories.create({ categoryName })
   
-    console.log(newCategory)
     if(newCategory) return res.status(200).send({ message: `Se ha creado la categoria: ${newCategory.categoryName}` })
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error ${error}` })
@@ -58,7 +57,7 @@ export const updateCategory = async (req, res) => {
       }
     })
 
-    if(categories[0] === 0) return res.status(200).send({ message: `No se ecuentra la categoria con el id: ${id}` })
+    if(categories[0] === 0) return res.status(400).send({ message: `No se ecuentra la categoria con el id: ${id}` })
 
     if(categories[0] >= 1) return res.status(200).send({ message: `La categoria se ha actualizado` })
   } catch (error) {
@@ -80,7 +79,7 @@ export const deleteCategoryById = async (req, res) => {
 
     if(categories === 0 ) return res.status(200).send({ message: `No se ecuentra la categoria con el id: ${id}` })
 
-    if(categories === 1 ) return res.status(200).send({ message: `La categoria se ha eliminado correctamente` })
+    if(categories >= 1 ) return res.status(200).send({ message: `La categoria se ha eliminado correctamente` })
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error: ${error}` })
   }
