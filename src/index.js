@@ -19,7 +19,9 @@ import { sequelize } from "./db/db.js"
 // import './models/FavoriteRecipes.js'
 // import './models/StepRecipes.js'
 // import './models/Stars.js'
-import './models/AppFeedbacks.js'
+// import './models/AppFeedbacks.js'
+import './models/Comments.js'
+import './models/CommentsRecipes.js'
 
 const PORT = process.env.PORT || 3000
 
