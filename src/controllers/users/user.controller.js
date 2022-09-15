@@ -132,7 +132,13 @@ export const activationUser = async (req, res) => {
       userName,
     })
 
-    if(newUser) return res.status(200).send({ message: "Activación exitosa", dataUser: [ newUser.userName, newUser.userEmail ] })
+    if(newUser) return res.status(200).send({ message: "Activación exitosa", dataUser: {
+      userId: newUser.userId,
+      userEmail: newUser.userEmail,
+      isAdmin: newUser.userIsAdmin,
+      isStaff: newUser.userIsStaff,
+      userName: newUser.userName
+    } })
   } catch (error) {
     return res.status(500).send({ message: error })
   }
@@ -168,6 +174,7 @@ export const login = async (req, res) => {
     })
 
     return res.status(200).send({
+      id: user.userId,
       email: user.userEmail,
       user: user.userName,
       userIsActive: !user.userIsActive ? `Tu cuenta esta deshabilitada, desea habilitarla?` : user.userIsActive,
