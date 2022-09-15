@@ -26,11 +26,11 @@ app.use(cors())
 
 app.use(Recipes)
 app.use(userRoutes)
-app.use(ProfileRoutes)
 app.use(ReportRoutes)
 app.use(Steps)
 app.use(FavRecipes)
 app.use(Stars)
+app.use(ProfileRoutes)
 
 // public api routes
 app.use(CategoryRoutes)

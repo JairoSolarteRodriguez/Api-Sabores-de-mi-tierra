@@ -4,15 +4,14 @@ import { Router } from 'express'
 import { authAdmin } from '../middlewares/authAdmin.js'
 import { authOwnerOrAdmin } from '../middlewares/authOwnerOrAdmin.js'
 
-import { createProfile, getProfileInfo } from '../controllers/profiles/profile.controller.js'
+import { createProfile, getProfileInfo, getAllProfileInfo, updateProfile } from '../controllers/profiles/profile.controller.js'
 
 const router = Router()
 
 /*==========Profile Routes=================*/
-router.get('/user-profile', authAdmin)
-router.get('/profile/:id')
+router.get('/user-profile', authAdmin, getAllProfileInfo)
 router.get('/info/:id', getProfileInfo)
-router.get('/userprofile/:id')
 router.post('/profile', createProfile)
+router.put('/update-profile/:id', updateProfile)
 
 export default router
