@@ -6,7 +6,7 @@ import { getAllDificults, getDificultById, createDificult, updateDificult, delet
 
 const router = Router()
 
-/*==========Profile Routes=================*/
+/*==========dificult Routes=================*/
 router.get('/dificult', getAllDificults)
 router.get('/dificult/:id', getDificultById)
 router.post('/dificult', createDificult)

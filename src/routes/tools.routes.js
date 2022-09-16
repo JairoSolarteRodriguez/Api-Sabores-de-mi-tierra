@@ -7,7 +7,7 @@ import { createTool, deleteAllTools, deleteToolById, getAllTools, getToolsById, 
 
 const router = Router()
 
-/*==========Profile Routes=================*/
+/*==========Tools Routes=================*/
 router.get('/tools', getAllTools)
 router.get('/tools/:id', getToolsById)
 router.post('/tools', createTool)

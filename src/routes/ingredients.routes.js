@@ -7,7 +7,7 @@ import { createIngredient, deleteAllIngredient, deleteIngredientById, getAllIngr
 
 const router = Router()
 
-/*==========Profile Routes=================*/
+/*==========Ingredients Routes=================*/
 router.get('/ingredients', getAllIngredients)
 router.get('/ingredients/:id', getIngredientById)
 router.post('/ingredients', createIngredient)

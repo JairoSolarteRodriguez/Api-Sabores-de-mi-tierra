@@ -6,7 +6,7 @@ import { createStep, getStepById, updateStepDescription, updateStepImage, delete
 
 const router = Router()
 
-/*==========Profile Routes=================*/
+/*==========Steps Routes=================*/
 // router.get('/step', )
 router.get('/step/:id', getStepById)
 router.post('/step', createStep)

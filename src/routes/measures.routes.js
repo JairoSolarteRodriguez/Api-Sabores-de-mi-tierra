@@ -6,7 +6,7 @@ import { getAllMeasures, getMeasureById, createMeasure, updateMeasure, deleteAll
 
 const router = Router()
 
-/*==========Profile Routes=================*/
+/*==========Measures Routes=================*/
 router.get('/measure', getAllMeasures)
 router.get('/measure/:id', getMeasureById)
 router.post('/measure', createMeasure)
