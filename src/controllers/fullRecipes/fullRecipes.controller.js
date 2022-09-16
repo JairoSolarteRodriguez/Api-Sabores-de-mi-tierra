@@ -139,6 +139,14 @@ export const getFullRecipeByRecipeId = async (req, res) => {
       JOIN categories c ON rc."categoryCategoryId" = c."categoryId"
       WHERE rc."recipeRecipeId" = ${recipe_id}
     `)
+
+    const [ comments ] = await sequelize.query(`
+      SELECT u."userName", up."profilePhoto", c."commentId", c."commentText", c."commentPhoto", c."createdAt", c."updatedAt" FROM comment_recipes cr
+      JOIN comments c ON cr."commentCommentId" = c."commentId"
+      JOIN users u ON cr."userUserId" = u."userId"
+      JOIN users_profiles up ON u."userId" = up."userId"
+      WHERE cr."recipeRecipeId" = ${recipe_id}
+    `)
     
     // auxiliar variables
     const stepsId = []
@@ -221,7 +229,8 @@ export const getFullRecipeByRecipeId = async (req, res) => {
       userName: recipeData.userName,
       profileImagePath: recipeData.profilePhoto,
       isPrivate: recipeData.recipePrivacity,
-      createdAt: recipeData.createdAt  
+      createdAt: recipeData.createdAt,
+      comments: comments.length >= 1 ? comments: 'Aun no hay commentarios aquí, se el primero el realizar uno'
     }
     
     return res.status(200).send(data)
