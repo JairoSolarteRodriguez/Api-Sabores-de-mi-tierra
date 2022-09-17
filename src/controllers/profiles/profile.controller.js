@@ -8,6 +8,7 @@ export const createProfile = async (req, res) => {
       profileBirthDate,
       profilePhoto,
       userId,
+      description,
     } = req.body
 
     if(!profileName || !userId) return res.status(400).send({ message: `Los campos nombre y usuario son obligatorios`})
@@ -20,7 +21,8 @@ export const createProfile = async (req, res) => {
       profileName,
       profileBirthDate,
       profilePhoto,
-      userId
+      userId,
+      description
     })
 
     if(newProfile) return res.status(200).send({ message: `Perfil completado exitosamente` })
