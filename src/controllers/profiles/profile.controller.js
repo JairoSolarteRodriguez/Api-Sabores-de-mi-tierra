@@ -54,8 +54,11 @@ export const getProfileInfo = async (req, res) => {
           "updatedAt",
         ],
         model: User,
+        where: { "$user.userIsActive$": true }
       }]
     })
+
+    if(!profile || profile.length === 0) return res.status(400).send({ message: `El usuario que busca no se encuentra` })
 
     return res.status(200).send(profile)
   } catch (error) {
