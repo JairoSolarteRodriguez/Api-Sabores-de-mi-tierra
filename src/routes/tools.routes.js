@@ -7,12 +7,12 @@ import { createTool, deleteAllTools, deleteToolById, getAllTools, getToolsById, 
 
 const router = Router()
 
-/*==========Profile Routes=================*/
+/*==========Tools Routes=================*/
 router.get('/tools', getAllTools)
 router.get('/tools/:id', getToolsById)
 router.post('/tools', createTool)
-router.patch('/tools/:id', updateTool)
-router.delete('/tools', deleteAllTools)
-router.delete('/tools/:id', deleteToolById)
+router.patch('/tools/:id', authAdmin, updateTool)
+router.delete('/tools', authAdmin, deleteAllTools)
+router.delete('/tools/:id', authAdmin, deleteToolById)
 
 export default router

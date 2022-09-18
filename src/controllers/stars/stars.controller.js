@@ -1,3 +1,4 @@
+import { sequelize } from "../../db/db.js";
 import { Stars } from "../../models/Stars.js";
 
 export const getRecipeStarsById = async (req, res) => {
@@ -37,7 +38,11 @@ export const createStars = async (req, res) => {
             recipeStartQuantity
         })
 
-        if (newRecipeStar) return res.status(200).send({ message: `Se ha calificado la receta: ${newRecipeStar.recipeStartQuantity}` })
+        const [ userScore ] = await sequelize.query(`
+            UPDATE users_profiles SET score = (SELECT ROUND( AVG(s."recipeStartQuantity"::numeric), 1) score FROM stars s WHERE s."userId" = (SELECT r."userId" FROM recipes r WHERE r."recipeId" = ${recipeId})) WHERE "userId" = (SELECT r."userId" FROM recipes r WHERE r."recipeId" = ${recipeId})
+        `)
+
+        if (newRecipeStar) return res.status(200).send({ message: `Se ha calificado la receta: ${recipeId} con ${newRecipeStar.recipeStartQuantity}` })
     } catch (error) {
         return res.status(500).send({ message: `Ha ocurrido un error: ${error}` })
     }
@@ -50,7 +55,7 @@ export const updateStars = async (req, res) => {
             user_id
          } = req.params
 
-        if (!recipe_id | !user_id) return res.status(400).send({ message: `Por favor enviar id de receta y usuario` })
+        if (!recipe_id || !user_id) return res.status(400).send({ message: `Por favor enviar id de receta y usuario` })
 
         const {
             recipeStartQuantity

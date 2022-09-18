@@ -6,7 +6,7 @@ import { getAllPrices, getPriceById, createPrices, updatePrice, deleteAllPrices,
 
 const router = Router()
 
-/*==========Profile Routes=================*/
+/*==========Prices Routes=================*/
 router.get('/price', getAllPrices)
 router.get('/price/:id', getPriceById)
 router.post('/price', createPrices)

@@ -29,12 +29,18 @@ export const getIngredientById = async (req, res) => {
 export const createIngredient = async (req, res) => {
   try {
     const {
-      ingredientName
+      ingredientName,
+      quantity,
+      measureId
     } = req.body
 
-    if(!ingredientName) return res.status(400).send({ message: `El campo ingrediente no puede ir vacio` })
+    if(!ingredientName || !measureId || !quantity) return res.status(400).send({ message: `Por favor rellene todos los campos` })
   
-    const newIngredient = await Ingredients.create({ ingredientName })
+    const newIngredient = await Ingredients.create({  
+      ingredientName,
+      quantity,
+      measureId 
+    })
   
     if(newIngredient) return res.status(200).send({ message: `Se ha creado el ingrediente: ${newIngredient.ingredientName}` })
   } catch (error) {
@@ -45,13 +51,13 @@ export const createIngredient = async (req, res) => {
 export const updateIngredient = async (req, res) => {
   try {
     const { id }  = req.params
-    const { ingredientName } = req.body
+    const { ingredientName, quantity } = req.body
 
     if(!ingredientName) return res.status(400).send({ message: `El campo ingrediente no puede ir vacio` })
 
     if(!id) return res.status(400).send({ message: `Por favor enviar un id` })
 
-    const ingredient = await Ingredients.update({ ingredientName }, {
+    const ingredient = await Ingredients.update({ ingredientName, quantity }, {
       where: {
         ingredientId: id
       }

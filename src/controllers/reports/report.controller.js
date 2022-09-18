@@ -12,7 +12,7 @@ export const createReport = async (req, res) => {
     if(!userReport || !userReported || !commentReport) return res.status(400).send({ message: `Por fallor llenar todos los campos` })
 
     const UsersReports = await UserReported.findAll({
-      where: { '$users_reported.user_reported$': userReported, '$users_reported.user_report_active$': true},
+      where: { '$users_reported.userReported$': userReported, '$users_reported.userReportActive$': true},
       include: [{
         model: User,
       }]
@@ -32,17 +32,17 @@ export const createReport = async (req, res) => {
       The user can only send a report, if the administrator or 
       staff rejects the reports then he can send reports again
     */
-    const report = await UserReported.findAll({ where: { user_report: userReport, user_report_active: true} })
+    const report = await UserReported.findAll({ where: { userReport: userReport, userReportActive: true} })
 
     if(report.length === 1) return res.status(400).send({ message: `No puede enviar más reportes a esté usuario, por favor intente luego` })
 
     if(userReport === userReported) return res.status(400).send({ message: `No se puede reportar usted mismo` })
 
     const newReport = await UserReported.create({
-      user_reported_comment: commentReport,
-      user_reported_date: date.toISOString(),
-      user_reported: userReported,
-      user_report: userReport
+      userReportedComment: commentReport,
+      userReportedDate: date.toISOString(),
+      userReported: userReported,
+      userReport: userReport
     })
 
     if(newReport) return res.status(200).send({ message: `Su reporte ha sido enviado exitosamente`, quantityReports: UsersReports.length+1 })
@@ -54,10 +54,10 @@ export const createReport = async (req, res) => {
 export const rejectReport = async (req, res) => {
   const { id } = req.params
 
-  UserReported.update({ user_report_active: false }, {
+  UserReported.update({ userReportActive: false }, {
     where: {
-      user_reported: id,
-      user_report_active: true
+      userReported: id,
+      userReportActive: true
     }
   })
 
@@ -70,18 +70,18 @@ export const getActiveReports = async (req, res) => {
   if(!id) return res.status(400).send({ message: `Por favor enviar un id` })
 
   const UsersReports = await UserReported.findAll({
-    where: { '$users_reported.user_reported$': id, '$users_reported.user_report_active$': true }, // get active reports
+    where: { '$users_reported.userReported$': id, '$users_reported.userReportActive$': true }, // get active reports
     include: [{
       attributes: [
-        "user_id",
-        "username",
-        "user_email",
-        "user_is_admin",
-        "user_is_staff",
-        "user_is_active",
-        "last_login",
-        "user_restricted",
-        "user_blocked",
+        "userId",
+        "userName",
+        "userEmail",
+        "userIsAdmin",
+        "userIsStaff",
+        "userIsActive",
+        "lastLogin",
+        "userRestricted",
+        "userBlocked",
         "createdAt",
         "updatedAt",
       ],
@@ -89,9 +89,9 @@ export const getActiveReports = async (req, res) => {
     }]
   })
 
-  const user = await User.findOne({ where: { user_id : id }})
+  const user = await User.findOne({ where: { userId : id }})
 
-  if(!UsersReports || UsersReports.length === 0) return res.status(200).send({ message: `No se encontraron reportes activos para el usuario: ${user.username}` })
+  if(!UsersReports || UsersReports.length === 0) return res.status(200).send({ message: `No se encontraron reportes activos para el usuario: ${user.userName}` })
 
   return res.status(200).send(UsersReports)
 }
@@ -103,11 +103,11 @@ export const deleteByIdReports = async (req, res) => {
   
     const deleted = await UserReported.destroy({
       where: {
-        user_reported: userId
+        userReported: userId
       }
     })
   
-    if(deleted === 1 ) return res.status(200).send({ message: `Reporte de usuario ${userId} eliminado exitosamente` })
+    if(deleted >= 1 ) return res.status(200).send({ message: `Reporte de usuario ${userId} eliminado exitosamente. Se han eliminado ${deleted} reporte(s)` })
       
     if(deleted === 0 ) return res.status(400).send({ message: `El Reporte de usuario ${userId} no fue encontrado` })
     
@@ -119,11 +119,9 @@ export const deleteByIdReports = async (req, res) => {
 
 export const deleteAllReports = async (req, res) => {
   try {
-    const deleted = await UserReported.destroy({ truncate: true })
+    const deleted = await UserReported.destroy({ truncate: { cascade: true } })
   
-    if(deleted) return res.status(200).send({ message: `Todos lo reportes Eliminados correctamente` })
-
-    return res.status(200).send({ message: deleted })
+   return res.status(200).send({ message: `Se eliminaron ${deleted} reporte(s)` })
   } catch (error) {
     return res.status(500).send({message: `Ocurrio un error: ${error}`})
   }
