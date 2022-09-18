@@ -63,8 +63,8 @@ export const Recipes = sequelize.define("recipes", {
 
 //User
 User.hasMany(Recipes,{
-    foreignKey: 'user_id',
-    sourceKeys: 'recipe_id'
+    foreignKey: 'userId',
+    sourceKeys: 'recipeId'
 })
 
 Recipes.belongsTo(User,{

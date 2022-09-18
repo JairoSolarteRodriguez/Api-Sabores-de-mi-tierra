@@ -9,7 +9,7 @@ export const getRecipeStarsById = async (req, res) => {
 
         const stars = await Stars.findAll({ where: { recipeId: recipe_id } })
 
-        if (!stars) return res.status(200).send({ message: `No se ecuentra la calificación con el id: ${id}` })
+        if (!stars) return res.status(200).send({ message: `No se ecuentra la calificación con el id: ${recipe_id}` })
 
         if (stars) return res.status(200).send(stars)
     } catch (error) {
