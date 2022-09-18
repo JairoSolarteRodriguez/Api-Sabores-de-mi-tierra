@@ -49,7 +49,6 @@ export const getBestRecipes = async (req, res) => {
 };
 
 export const getFilterRecipes = async (req, res) => {
-  console.log('query ->', req.query)
   let { search, category, ingredient, page, limit } = req.query;
 
   try {
