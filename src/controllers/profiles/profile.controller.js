@@ -69,7 +69,7 @@ export const getProfileInfo = async (req, res) => {
 export const getAllProfileInfo = async (req, res) => {
   try {
 
-    const profile = await UserProfile.findOne({
+    const profile = await UserProfile.findAll({
       include: [{
         attributes: [
           "userId",
@@ -85,6 +85,7 @@ export const getAllProfileInfo = async (req, res) => {
           "updatedAt",
         ],
         model: User,
+        // where: { "$user.userIsActive$": true }
       }]
     })
 
@@ -101,18 +102,20 @@ export const updateProfile = async (req, res) => {
       profileName,
       profileBirthDate,
       profilePhoto,
+      profileDescription,
     } = req.body
 
-    if(!profileName || !profileBirthDate || !profilePhoto) return res.status(400).send({ message: `Los campos son obligatorios`})
+    if(!profileName || !profileBirthDate || !profilePhoto || !profileDescription) return res.status(400).send({ message: `Los campos son obligatorios`})
 
     const newProfile = await UserProfile.update({
       profileName,
       profileBirthDate,
-      profilePhoto
+      profilePhoto,
+      userDescription: profileDescription
     }, {where: { userId: id}})
 
     if(newProfile) return res.status(200).send({ message: `Perfil actualizado` })
   } catch (error) {
-    return res.send(500).send({ message: `Algo ocurrio: ${error}` })
+    return res.status(500).send({ message: `Algo ocurrio: ${error}` })
   }
 }
