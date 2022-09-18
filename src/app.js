@@ -16,6 +16,7 @@ import Steps from './routes/steps.routes.js'
 import Recipes from './routes/recipes.routes.js'
 import FavRecipes from './routes/favRecipes.routes.js'
 import Stars from './routes/stars.routes.js'
+import Home from './routes/home.routes.js'
 
 const app = express()
 
@@ -30,6 +31,7 @@ app.use(ReportRoutes)
 app.use(Steps)
 app.use(FavRecipes)
 app.use(Stars)
+app.use(Home)
 
 // public api routes
 app.use(CategoryRoutes)
