@@ -22,6 +22,9 @@ export const UserProfile = sequelize.define("users_profile", {
   profilePhoto:{
     type: DataTypes.TEXT
   },
+  userDescription:{
+    type: DataTypes.TEXT(500)
+  },
 },{
   timestamps: true,
 })
