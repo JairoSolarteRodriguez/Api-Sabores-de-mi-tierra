@@ -17,7 +17,7 @@ export const getFavRecipes = async (req, res) => {
 
   try {
 
-    const [recipes] = await sequelize.query(`
+    const [recipesFav] = await sequelize.query(`
     SELECT r."userId", r."recipeId", r."recipeName", d."dificultName", p."priceSufix", r."recipePhoto", r."recipePortions", 
     r."recipeTime", r."recipeDescription", r."recipePrivacity", r."createdAt"
     FROM recipes r
