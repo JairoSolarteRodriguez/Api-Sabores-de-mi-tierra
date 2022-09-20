@@ -131,20 +131,18 @@ export const updateProfile = async (req, res) => {
 
 export const getRecipesProfile = async (req, res) => {
   const { id } = req.params;
-  let { page, limit } = req.query;
 
   try {
-    parseInt(limit);
-    parseInt(page);
-  } catch (error) {
-    return error;
-  }
-
-  !limit ? (limit = 5) : limit;
-  !page ? (page = 1) : page;
-
-  try {
-    const [recipes] = await sequelize.query(`
+    const [recipesFav] = await sequelize.query(`
+    SELECT r."userId", r."recipeId", r."recipeName", d."dificultName", p."priceSufix", r."recipePhoto", r."recipePortions", 
+    r."recipeTime", r."recipeDescription", r."recipePrivacity", r."createdAt"
+    FROM recipes r
+    JOIN prices p ON p."priceId" = r."priceId" 
+    JOIN dificults d ON d."dificultId" = r."recipeDificult"
+    JOIN favorite_recipes fr ON fr."recipeRecipeId" = r."recipeId"
+    WHERE fr."userUserId" = ${id}
+    `);
+    const [recipesUser] = await sequelize.query(`
     SELECT r."userId", r."recipeId", r."recipeName", d."dificultName", p."priceSufix", r."recipePhoto", r."recipePortions", 
     r."recipeTime", r."recipeDescription", r."recipePrivacity", r."createdAt"
     FROM recipes r
@@ -153,9 +151,14 @@ export const getRecipesProfile = async (req, res) => {
     WHERE r."userId" = ${id}
     `);
 
+    let recipes = {
+      recipesFav: recipesFav,
+      recipesUser: recipesUser
+    }
+
     return res
       .status(200)
-      .send(recipes.slice(page === 1 ? 0 : limit * (page - 1), limit * page));
+      .send(recipes);
   } catch (error) {
     return res.status(500).send({ message: `Algo ocurrio ${error}` });
   }
