@@ -141,7 +141,7 @@ export const getFullRecipeByRecipeId = async (req, res) => {
     `)
 
     const [ comments ] = await sequelize.query(`
-      SELECT u."userName", up."profilePhoto", c."commentId", c."commentText", c."commentPhoto", c."createdAt", c."updatedAt" FROM comment_recipes cr
+      SELECT u."userName", u."userId", up."profilePhoto", c."commentId", c."commentText", c."commentPhoto", c."createdAt", c."updatedAt" FROM comment_recipes cr
       JOIN comments c ON cr."commentCommentId" = c."commentId"
       JOIN users u ON cr."userUserId" = u."userId"
       JOIN users_profiles up ON u."userId" = up."userId"
