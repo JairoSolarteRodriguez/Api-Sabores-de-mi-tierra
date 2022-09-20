@@ -19,6 +19,7 @@ import Stars from './routes/stars.routes.js'
 import Home from './routes/home.routes.js'
 import Feedbacks from './routes/feedback.routes.js'
 import Comments from './routes/comments.routes.js'
+import recipeReportsRoutes from './routes/recipeReports.routes.js'
 
 const app = express()
 
@@ -29,6 +30,7 @@ app.use(cors())
 app.use(Recipes)
 app.use(userRoutes)
 app.use(ReportRoutes)
+app.use(recipeReportsRoutes)
 app.use(Steps)
 app.use(FavRecipes)
 app.use(Stars)

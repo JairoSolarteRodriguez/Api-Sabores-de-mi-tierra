@@ -7,7 +7,7 @@ import { createReport, rejectReport, getActiveReports, deleteAllReports, deleteB
 
 const router = Router()
 
-/*==========Reports Routes=================*/
+/*==========Reports user Routes=================*/
 router.get('/report/:id', authAdmin, getActiveReports)
 router.post('/report', createReport)
 router.put('/report/:id', authAdmin, rejectReport)
