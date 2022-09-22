@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken"
 import { User } from "../../models/Users.js"
 import { validateEmail, ActivationToken, RefreshToken, sendMail, encryptPassword, comparePassword } from "../../helpers/helpers.js"
 import "dotenv/config"
+import { UserProfile } from "../../models/UsersProfile.js"
 
 const { ACTIVATION_TOKEN_SECRET } = process.env
 
@@ -283,5 +284,40 @@ export const disableUser = async(req, res) => { // Disabled a user
     if(updatedUser[0] >= 1) return res.status(200).send({ message: `Usuario ${userId} modificado exitosamente` })
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error: ${error}` })
+  }
+}
+
+export const googleLogin = async(req, res) => {
+  try {
+    const { 
+      userEmail,
+      userName
+    } = req.body
+  
+    const {
+      profileName, 
+      profilePhoto,
+    } = req.body
+
+    if(!userEmail || !userName || !profileName || !profilePhoto) return res.status(400).send({ message: `Por favor llenar todos los campos` })
+    
+    const userExist = await User.findOne({ where: { userEmail: userEmail } })
+
+    if(userExist) return res.status(400).send({ message: `El correo ${userEmail} ya se encuentra registrado en sabores de mi tierra, si olvido la contraseña por favor restablecerla` })
+
+    const newUser = await User.create({
+      userEmail,
+      userName,
+    })
+
+    const profile = await UserProfile.create({
+      profileName,
+      profilePhoto,
+      userId: newUser.dataValues.userId
+    })
+  
+    return res.status(200).send({newUser, profile})
+  } catch (error) {
+    
   }
 }

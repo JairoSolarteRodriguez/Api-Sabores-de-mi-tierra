@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { getUsers, createUser, activationUser, login, verifyForUpdatePassword, updatePassword, deleteUser, disableUser } from '../controllers/users/user.controller.js'
+import { getUsers, createUser, activationUser, login, verifyForUpdatePassword, updatePassword, deleteUser, disableUser, googleLogin } from '../controllers/users/user.controller.js'
 
 // Middlewares
 import { authAdmin } from '../middlewares/authAdmin.js'
@@ -12,6 +12,7 @@ const router = Router()
 
 router.get('/users', authAdmin, getUsers)
 router.post('/register', createUser)
+router.post('/google-login', googleLogin)
 router.post('/login', login)
 router.post('/activate', activationUser)
 router.post('/change-password', verifyForUpdatePassword)
