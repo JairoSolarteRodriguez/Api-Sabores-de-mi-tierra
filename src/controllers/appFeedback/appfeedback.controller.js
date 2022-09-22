@@ -114,7 +114,7 @@ export const updateFeedback = async (req, res) => {
 
 export const getScoreApp = async (req, res) => {
   const [ score ] = await sequelize.query(`
-    SELECT AVG(af."appFeedBackId")  FROM app_feedbacks af
+    SELECT AVG(af."stars")  FROM app_feedbacks af
   `)
 
   const [ totalFeedbacks ] = await sequelize.query(`
