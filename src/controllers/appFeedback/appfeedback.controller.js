@@ -111,3 +111,26 @@ export const updateFeedback = async (req, res) => {
     return res.status(500).send({ message: `Algo ocurrio ${error}` })
   }
 }
+
+export const getScoreApp = async (req, res) => {
+  const [ score ] = await sequelize.query(`
+    SELECT AVG(af."appFeedBackId")  FROM app_feedbacks af
+  `)
+
+  const [ totalFeedbacks ] = await sequelize.query(`
+    SELECT COUNT(af."appFeedBackId")  FROM app_feedbacks af
+  `)
+
+  const [ stars ] = await sequelize.query(`
+    SELECT COUNT(stars) quantity, ROUND(stars) stars FROM app_feedbacks GROUP BY  ROUND(stars) ORDER BY stars DESC
+  `)
+
+  let totalScore = score.map((elm) => parseFloat(elm.avg))
+  let quantity = totalFeedbacks.map((elm) => parseInt(elm.count))
+
+  return res.status(200).send({
+    qualification: totalScore,
+    quantity,
+    stars
+  })
+}
