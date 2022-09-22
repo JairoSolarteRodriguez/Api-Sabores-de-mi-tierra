@@ -4,7 +4,7 @@ import { sequelize } from "../../db/db.js";
 
 export const createProfile = async (req, res) => {
   try {
-    const { profileName, profileBirthDate, profilePhoto, userId, description } =
+    const { profileName, profileBirthDate, profilePhoto, userId, userDescription } =
       req.body;
 
     if (!profileName || !userId)
@@ -24,7 +24,7 @@ export const createProfile = async (req, res) => {
       profileBirthDate,
       profilePhoto,
       userId,
-      description,
+      userDescription,
     });
 
     if (newProfile)
