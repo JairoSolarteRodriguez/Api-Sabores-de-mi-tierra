@@ -10,7 +10,7 @@ const router = Router()
 /*==========Fav Recipes Routes=================*/
 router.get('/recipes-fav/:userId', getFavRecipes)
 router.post('/recipes-fav', addFavRecipe)
-router.delete('/recipes-fav/:id', deleteFavRecipe)
+router.delete('/recipes-fav/:userId/:recipeId', deleteFavRecipe)
 
 
 export default router

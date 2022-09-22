@@ -71,13 +71,14 @@ export const addFavRecipe = async (req, res) => {
 
 export const deleteFavRecipe = async (req, res) => {
   try {
-    const { id } = req.params
+    const { userId, recipeId } = req.params
 
-    if (!id) return res.status(400).send({ message: `Por favor enviar un id` })
+    if (!userId || !recipeId) return res.status(400).send({ message: `Algo salio mal por favor intentalo más tarde` })
 
     const favRecipe = await FavoriteRecipes.destroy({
       where: {
-        recipeRecipeId: id
+        userUserId: userId,
+        recipeRecipeId: recipeId
       }
     })
 
