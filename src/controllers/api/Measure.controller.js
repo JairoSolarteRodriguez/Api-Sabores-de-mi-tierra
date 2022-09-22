@@ -29,14 +29,14 @@ export const getMeasureById = async (req, res) => {
 export const createMeasure = async (req, res) => {
   try {
     const {
-      measure_sufix
+      measureName
     } = req.body
 
-    if(!measure_sufix) return res.status(400).send({ message: `El campo medida no puede ir vacio` })
+    if(!measureName) return res.status(400).send({ message: `El campo medida no puede ir vacio` })
   
-    const newMeasure = await Measures.create({ measure_sufix })
+    const newMeasure = await Measures.create({ measureName })
   
-    if(newMeasure) return res.status(200).send({ message: `Se ha creado la medida: ${newMeasure.measure_sufix}` })
+    if(newMeasure) return res.status(200).send({ message: `Se ha creado la medida: ${newMeasure.measureName}` })
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error ${error}` })
   }
@@ -45,13 +45,13 @@ export const createMeasure = async (req, res) => {
 export const updateMeasure = async (req, res) => {
   try {
     const { id }  = req.params
-    const { measure_sufix } = req.body
+    const { measureName } = req.body
 
-    if(!measure_sufix) return res.status(400).send({ message: `El campo medida no puede ir vacio` })
+    if(!measureName) return res.status(400).send({ message: `El campo medida no puede ir vacio` })
 
     if(!id) return res.status(400).send({ message: `Por favor enviar un id` })
 
-    const measure = await Measures.update({ measure_sufix }, {
+    const measure = await Measures.update({ measureName }, {
       where: {
         measure_id: id
       }
