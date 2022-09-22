@@ -1,24 +1,15 @@
 import { AppFeedbacks } from '../../models/AppFeedbacks.js'
-import { User } from '../../models/Users.js'
+// import { User } from '../../models/Users.js'
+import { sequelize } from '../../db/db.js'
 
 export const getFeedback = async (req, res) => {
   try {
 
-    const feedbacks = await AppFeedbacks.findAll({ 
-      include: [{
-        attributes: [
-          "userId",
-          "userName",
-          "userEmail",
-          "userIsAdmin",
-          "userIsStaff",
-          "userIsActive",
-          "lastLogin",
-          "createdAt",
-        ],
-        model: User,
-      }]
-    })
+    const [ feedbacks ] = await sequelize.query(`
+      SELECT af."appFeedBackId", af."appFeedbackComment", af."stars", af."createdAt",  u."userId", u."userEmail", u."userName", up."profilePhoto", up."score" "userScore" FROM app_feedbacks af
+      JOIN users u ON af."userId" = u."userId"
+      JOIN users_profiles up ON u."userId" = up."userId"
+    `)
 
     if(feedbacks) return res.status(200).send( feedbacks )
     
@@ -34,22 +25,12 @@ export const getFeedbackById = async (req, res) => {
 
     if(!id) return res.status(400).send({ message: `Por favor enviar un Id` })
 
-    const feedbacks = await AppFeedbacks.findOne({ 
-      where: { appFeedBackId: id },
-      include: [{
-        attributes: [
-          "userId",
-          "userName",
-          "userEmail",
-          "userIsAdmin",
-          "userIsStaff",
-          "userIsActive",
-          "lastLogin",
-          "createdAt",
-        ],
-        model: User,
-      }]
-    })
+    const [ feedbacks ] = await sequelize.query(`
+      SELECT af."appFeedBackId", af."appFeedbackComment", af."stars", af."createdAt",  u."userId", u."userEmail", u."userName", up."profilePhoto", up."score" "userScore" FROM app_feedbacks af
+      JOIN users u ON af."userId" = u."userId"
+      JOIN users_profiles up ON u."userId" = up."userId"
+      WHERE af."appFeedBackId" = ${id}
+    `)
     
     if(feedbacks) return res.status(200).send( feedbacks )
 
