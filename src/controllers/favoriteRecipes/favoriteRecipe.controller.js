@@ -1,5 +1,10 @@
 import { FavoriteRecipes } from '../../models/FavoriteRecipes.js'
 import { sequelize } from "../../db/db.js";
+import jwt from "jsonwebtoken"
+
+import "dotenv/config"
+
+const { REFRESH_TOKEN_SECRET } = process.env
 
 export const getFavRecipes = async (req, res) => {
   const { userId } = req.params
@@ -43,6 +48,12 @@ export const addFavRecipe = async (req, res) => {
       recipeId,
       userId
     } = req.body
+
+    const { authorization } = req.headers
+
+    const userToken = jwt.verify(authorization, REFRESH_TOKEN_SECRET)
+
+    if(userId === userToken.id) return res.status(400).send({ message: `No puede agregar sus propias recetas a favorito.` })
 
     if (!recipeId || !userId) return res.status(400).send({ message: `Por favor enviar un usuario y una receta` })
 
