@@ -16,8 +16,6 @@ export const getCommentsByRecipeId = async (req, res) => {
       WHERE cr."recipeRecipeId" = ${recipe_id}
     `)
 
-    if(comments.length === 0) return res.status(400).send({ message: `Aún no hay comentarios aquí` })
-
     return res.status(200).send(comments)
   } catch (error) {
     return res.status(500).send({ message: `Ha ocurrido un error: ${error}` })
