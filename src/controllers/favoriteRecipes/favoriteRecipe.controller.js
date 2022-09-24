@@ -3,6 +3,7 @@ import { sequelize } from "../../db/db.js";
 import jwt from "jsonwebtoken"
 
 import "dotenv/config"
+import { Recipes } from '../../models/Recipes.js';
 
 const { REFRESH_TOKEN_SECRET } = process.env
 
@@ -53,9 +54,18 @@ export const addFavRecipe = async (req, res) => {
 
     const userToken = jwt.verify(authorization, REFRESH_TOKEN_SECRET)
 
-    if(userId === userToken.id) return res.status(400).send({ message: `No puede agregar sus propias recetas a favorito.` })
-
     if (!recipeId || !userId) return res.status(400).send({ message: `Por favor enviar un usuario y una receta` })
+    
+
+    let validate = await Recipes.findOne({
+      where: { recipeId: recipeId }
+    })
+
+    if(validate){
+      if(validate.dataValues.userId === userToken.id) return res.status(400).send({ message: `No puede agregar recetas propias a favoritos` })
+    }
+
+    if(!validate) return res.status(400).send({ message: `Receta no encontrada.`})
 
     const favRecipe = await FavoriteRecipes.create({
       userUserId: userId,
