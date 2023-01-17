@@ -8,7 +8,7 @@ Api for the application "Sabores Ancestrales" social network to share your favor
 
 You can find the documentation at the following link: 
 
-[Api documentation](https://documenter.getpostman.com/view/19337266/2s8ZDVYhzG#154b6e26-9850-467e-b8cd-aa8d495f36f7)
+[Api documentation](https://documenter.getpostman.com/view/19337266/2s8ZDVYhzG#intro)
 
 ## Environment Variables
 
@@ -38,7 +38,7 @@ Install Api-Sabores-de-mi-tierra with npm
     
 ## Documentation
 
-[Documentation](https://documenter.getpostman.com/view/19337266/2s8ZDVYhzG#154b6e26-9850-467e-b8cd-aa8d495f36f7)
+[Documentation](https://documenter.getpostman.com/view/19337266/2s8ZDVYhzG#intro)
 
 
 ## Tech Stack
